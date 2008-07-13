@@ -10,8 +10,8 @@ has connection => (
 sub parse_feed_entry {
     my $self = shift;
     my $xml_feed_entry = shift;
-    warn $xml_feed_entry;
-
+    warn YAML::Dump($xml_feed_entry);
+    
     return 1;
 }
 
