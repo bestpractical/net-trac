@@ -12,5 +12,5 @@ isa_ok($ticket, 'Net::Trac::Ticket');
 can_ok($ticket, 'load');
 ok($ticket->load(1));
 like($ticket->state->{'summary'}, qr/pony/);
-like($ticket->summary, qr/pony/);
-ok($ticket->history);
+like($ticket->summary, qr/pony/, "The summary looks like a pony");
+ok($ticket->history, "The ticket has some history");
