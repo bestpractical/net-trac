@@ -31,11 +31,10 @@ sub load {
     my ($id) = validate_pos( @_, { type => SCALAR } );
     $self->connection->_fetch( "/ticket/" . $id . "?format=csv" );
 
-
-           my $content =      $self->connection->mech->content;
+    my $content = $self->connection->mech->content;
 
     my $stateref
-        = $self->connection->_csv_to_struct( data => \$content , key => 'id' );
+        = $self->connection->_csv_to_struct( data => \$content, key => 'id' );
     return undef unless $stateref;
     $self->state( $stateref->{$id} );
     return $id;
@@ -90,7 +89,7 @@ sub create {
             component   => 0,
             version     => 0,
             keywords    => 0,
-            cc => 0,
+            cc          => 0,
             status      => 0
 
         }
@@ -98,16 +97,12 @@ sub create {
 
     my $form = $self->_get_new_ticket_form();
 
+    my %form = map { 'field_' . $_ => $args{$_} } keys %args;
 
-    my %form = map {
-            'field_'.$_ => $args{$_}
-    } keys %args;
-
-    $self->connection->mech->submit_form( form_number => 2, # BRITTLE
-            fields => {
-                %form,
-                submit => 1
-            });
+    $self->connection->mech->submit_form(
+        form_number => 2,                  # BRITTLE
+        fields => { %form, submit => 1 }
+    );
 
     my $reply = $self->connection->mech->response;
 }
