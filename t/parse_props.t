@@ -12,8 +12,8 @@ EOF
 use_ok('Net::Trac::TicketHistoryEntry');
 
 my $e = Net::Trac::TicketHistoryEntry->new();
-my $props = $e->_parse_props($props);
-is(scalar keys %$props, 4, "Four properties");
+my $prop_data = $e->_parse_props($props);
+is(scalar keys %$prop_data, 4, "Four properties");
 my @keys = sort (qw(owner status type description));
-is_deeply([sort keys %$props], [sort @keys]);
+is_deeply([sort keys %$prop_data], [sort @keys]);
 
