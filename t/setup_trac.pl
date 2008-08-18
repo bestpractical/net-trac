@@ -19,6 +19,7 @@ sub new {
 
 sub start_test_server {
 my $self = shift;
+
 $self->port( int(60000 + rand(2000)));
 $self->dir(tempdir( CLEANUP => 0));
 $self->init;
