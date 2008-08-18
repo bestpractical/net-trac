@@ -1,20 +1,39 @@
 #!/usr/bin/perl
 
+package Net::Trac::TestHarness;
 use warnings;
 use strict;
 
 use Test::More;
 use File::Temp qw/tempdir/;
+use LWP::Simple qw/get/;
+use Time::HiRes qw/usleep/;
 
-
-
-package Net::Trac::TestHarness;
 
 sub new {
     my $class = shift;
     my $self = {};
     bless $self, $class;
     return $self;
+}
+
+sub start_test_server {
+my $self = shift;
+$self->port( int(60000 + rand(2000)));
+$self->dir(tempdir( CLEANUP => 0));
+$self->init;
+$self->daemonize;
+
+return $self->_did_server_start;
+}
+
+sub _did_server_start {
+    my $self = shift;
+    for ( 1 .. 200 ) {
+        return 1 if eval { get( $self->url ) };
+        usleep 5000;
+    }
+    die "Server didn't start";
 }
 
 sub port {
@@ -33,7 +52,6 @@ sub dir {
     return $self->{_dir};
 }
 
-
 sub pid {
     my $self = shift;
     if (@_) {
@@ -41,8 +59,6 @@ sub pid {
     }
     return $self->{_pid};
 }
-
-
 
 sub url {
     my $self = shift;
@@ -52,14 +68,12 @@ sub url {
     return $self->{_url};
 }
 
-
-
 sub init {
     my $self = shift;
     my $dir  = $self->dir;
     my $port = $self->port;
     open( my $sys,
-        "trac-admin $dir/trac initenv proj sqlite:db/trac.db $dir/trac trac|" );
+        "trac-admin $dir/trac initenv proj sqlite:db/trac.db svn ''|" );
     my @content = <$sys>;
     my ($url) = grep { defined $_ }
         map { /Then point your browser to (.*)\./ ? $1 : undef } @content;
@@ -108,5 +122,10 @@ sub kill_trac {
            }
            }
 
+
+sub DESTROY {
+    my $self = shift;
+    $self->kill_trac;
+}
 
            1;

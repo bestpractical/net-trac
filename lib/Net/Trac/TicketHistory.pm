@@ -36,4 +36,24 @@ sub load {
     return 1;
 }
 
+=head1 NAME
+
+Net::Trac::TicketHistory
+
+=head1 DESCRIPTION
+
+This class represents a trac ticket's history
+
+=head1 METHODS
+
+=head2 load
+
+=head2 entries
+
+=head2 ticket
+
+Returns the ticket's id
+
+=cut
+
 1;

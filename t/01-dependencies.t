@@ -18,7 +18,7 @@ if ($@) { plan skip_all => 'Module::CoreList not installed' }
 plan 'no_plan';
 
 my %used;
-find( \&wanted, qw/ lib bin t / );
+find( \&wanted, qw/ lib t / );
 
 sub wanted {
     return unless -f $_;

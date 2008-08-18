@@ -47,9 +47,17 @@ sub _get_new_ticket_form {
     $self->connection->_fetch("/newticket");
     for my $form ( $self->connection->mech->forms() ) {
         return $form if $form->find_input('field_reporter');
-
     }
+    return undef;
+}
 
+sub _get_update_ticket_form {
+    my $self = shift;
+    $self->connection->ensure_logged_in;
+    $self->connection->_fetch("/ticket/".$self->id);
+    for my $form ( $self->connection->mech->forms() ) {
+        return $form if $form->find_input('field_reporter');
+    }
     return undef;
 }
 
@@ -105,14 +113,57 @@ sub create {
     );
 
     my $reply = $self->connection->mech->response;
+    if ($reply->title =~ /^#(\d+)/) {
+        my $id = $1;
+        $self->load($id);
+        return $id;
+    } else {
+        return undef;
+    }
 }
+
+
+sub update {
+    my $self = shift;
+    my %args = validate(
+        @_,
+        {   summary     => 0,
+            reporter    => 0,
+            description => 0,
+            owner       => 0,
+            type        => 0,
+            priority    => 0,
+            milestone   => 0,
+            component   => 0,
+            version     => 0,
+            keywords    => 0,
+            cc          => 0,
+            status      => 0
+
+        }
+    );
+
+    my $form = $self->_get_update_ticket_form();
+
+    my %form = map { 'field_' . $_ => $args{$_} } keys %args;
+
+    $self->connection->mech->submit_form(
+        form_name => 'propform',
+        fields => { %form, submit => 1 }
+    );
+
+    my $reply = $self->connection->mech->response;
+    $self->load($self->id);
+
+}
+
 
 sub history {
     my $self = shift;
     my $hist = Net::Trac::TicketHistory->new(
         { connection => $self->connection, ticket => $self->id } );
     $hist->load;
-
+    return $hist;
 }
 
 #http://barnowl.mit.edu/ticket/36?format=tab

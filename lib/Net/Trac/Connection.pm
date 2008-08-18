@@ -75,7 +75,6 @@ sub ensure_logged_in {
     my $self = shift;
     if ( !defined $self->logged_in ) {
         $self->_fetch("/login");
-        warn $self->mech->response;
         $self->logged_in(1);
     }
     return $self->logged_in;

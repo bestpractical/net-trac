@@ -1,6 +1,3 @@
-use warnings; 
-use strict;
-
 use Test::More qw/no_plan/;
 use_ok('Net::Trac::Connection');
 use_ok('Net::Trac::Ticket');
@@ -8,7 +5,9 @@ require 't/setup_trac.pl';
 
 
 my $tr = Net::Trac::TestHarness->new();
+
 ok($tr->start_test_server(), "The server started!");
+
 
 my $trac = Net::Trac::Connection->new(
     url      => $tr->url,
@@ -25,9 +24,28 @@ can_ok($ticket => '_fetch_new_ticket_metadata');
 ok($ticket->_fetch_new_ticket_metadata);
 can_ok($ticket => 'create');
 ok($ticket->create(summary => 'This product has only a moose, not a pony'));
+is($ticket->id, 1);
 
 can_ok($ticket, 'load');
 ok($ticket->load(1));
 like($ticket->state->{'summary'}, qr/pony/);
 like($ticket->summary, qr/pony/, "The summary looks like a pony");
-ok($ticket->history, "The ticket has some history");
+like($ticket->summary, qr/moose/, "The summary looks like a moose");
+
+ok( $ticket->update( 
+                        summary => 'The product does not contain a pony'
+            
+            
+            ), "updated!");
+
+like($ticket->summary, qr/pony/, "The summary looks like a pony");
+unlike($ticket->summary, qr/moose/, "The summary does not look like a moose");
+
+my $history = $ticket->history;
+ok($history, "The ticket has some history");
+isa_ok($history, 'Net::Trac::TicketHistory');
+can_ok($history, 'entries');
+my @entries = @{$history->entries};
+my $first = shift @entries;
+is($entries[0], undef);
+is ($first->category, 'Ticket');

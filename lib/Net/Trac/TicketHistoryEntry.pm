@@ -70,4 +70,26 @@ sub _parse_props {
     return $props;
 }
 
+=head1 NAME
+
+Net::Trac::TicketHistoryEntry
+
+=head1 DESCRIPTION
+
+This class represents a single item in a trac ticket history update
+
+=head1 METHODS
+
+=head2 author
+
+=head2 date
+
+=head2 category
+
+=head2 content
+
+=head2 prop_changes
+
+=cut
+
 1;
