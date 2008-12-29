@@ -45,8 +45,10 @@ sub _get_new_ticket_form {
     my $self = shift;
     $self->connection->ensure_logged_in;
     $self->connection->_fetch("/newticket");
+    my $i = 1; # form number
     for my $form ( $self->connection->mech->forms() ) {
-        return $form if $form->find_input('field_reporter');
+        return ($form,$i) if $form->find_input('field_reporter');
+        $i++;
     }
     return undef;
 }
@@ -55,15 +57,17 @@ sub _get_update_ticket_form {
     my $self = shift;
     $self->connection->ensure_logged_in;
     $self->connection->_fetch("/ticket/".$self->id);
+    my $i = 1; # form number;
     for my $form ( $self->connection->mech->forms() ) {
-        return $form if $form->find_input('field_reporter');
+        return ($form,$i) if $form->find_input('field_reporter');
+        $i++;
     }
     return undef;
 }
 
 sub _fetch_new_ticket_metadata {
     my $self = shift;
-    my $form = $self->_get_new_ticket_form;
+    my ($form, $form_num) = $self->_get_new_ticket_form;
 
     return undef unless $form;
 
@@ -103,12 +107,12 @@ sub create {
         }
     );
 
-    my $form = $self->_get_new_ticket_form();
+    my ($form,$form_num)  = $self->_get_new_ticket_form();
 
     my %form = map { 'field_' . $_ => $args{$_} } keys %args;
 
     $self->connection->mech->submit_form(
-        form_number => 2,                  # BRITTLE
+        form_number => $form_num,
         fields => { %form, submit => 1 }
     );
 
@@ -143,12 +147,12 @@ sub update {
         }
     );
 
-    my $form = $self->_get_update_ticket_form();
+    my ($form,$form_num)= $self->_get_update_ticket_form();
 
     my %form = map { 'field_' . $_ => $args{$_} } keys %args;
 
     $self->connection->mech->submit_form(
-        form_name => 'propform',
+        form_number => $form_num,
         fields => { %form, submit => 1 }
     );
 
@@ -156,7 +160,6 @@ sub update {
     $self->load($self->id);
 
 }
-
 
 sub history {
     my $self = shift;
