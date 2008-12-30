@@ -1,7 +1,9 @@
 package Net::Trac::Ticket;
 use Moose;
 use Params::Validate qw(:all);
+
 use Net::Trac::TicketHistory;
+use Net::Trac::TicketAttachment;
 
 has connection => (
     isa => 'Net::Trac::Connection',
@@ -12,6 +14,8 @@ has state => (
     isa => 'HashRef',
     is  => 'rw'
 );
+
+has _attachments     => ( isa => 'ArrayRef', is => 'rw' );
 
 has valid_milestones => ( isa => 'ArrayRef', is => 'rw' );
 has valid_types      => ( isa => 'ArrayRef', is => 'rw' );
@@ -158,6 +162,8 @@ sub update {
 
     my $reply = $self->connection->mech->response;
 
+    # XXX TODO: use _die_on_error here?
+
     if ( $reply->is_success ) {
         return $self->load($self->id);
     }
@@ -191,5 +197,67 @@ sub comments {
     return wantarray ? @comments : \@comments;
 }
 
+sub _get_add_attachment_form {
+    my $self = shift;
+    $self->connection->ensure_logged_in;
+    $self->connection->_fetch("/attachment/ticket/".$self->id."/?action=new");
+    my $i = 1; # form number;
+    for my $form ( $self->connection->mech->forms() ) {
+        return ($form,$i) if $form->find_input('attachment');
+        $i++;
+    }
+    return undef;
+}
+
+sub attach {
+    my $self = shift;
+    my %args = validate( @_, { file => 1, description => 0 } );
+
+    my ($form, $form_num)  = $self->_get_add_attachment_form();
+
+    $self->connection->mech->submit_form(
+        form_number => $form_num,
+        fields => {
+            attachment  => $args{'file'},
+            description => $args{'description'},
+            replace     => 0
+        }
+    );
+
+    my $reply = $self->connection->mech->response;
+    $self->connection->_die_on_error( $reply->base->as_string );
+
+    return $self->attachments->[-1];
+}
+
+sub _update_attachments {
+    my $self = shift;
+    $self->connection->ensure_logged_in;
+    my $content = $self->connection->_fetch("/attachment/ticket/".$self->id."/");
+    
+    if ( $content =~ m{<dl class="attachments">(.+?)</dl>}is ) {
+        my $html = $1;
+        my @attachments;
+
+        while ( $html =~ m{<dt>(.+?)</dd>}gis ) {
+            my $fragment = $1;
+            my $attachment = Net::Trac::TicketAttachment->new({
+                connection => $self->connection,
+                ticket     => $self->id
+            });
+            $attachment->_parse_html( $fragment );
+            push @attachments, $attachment;
+        }
+        $self->_attachments( \@attachments );
+    }
+}
+
+sub attachments {
+    my $self = shift;
+    $self->_update_attachments;
+    return wantarray ? @{$self->_attachments} : $self->_attachments;
+}
+
 #http://barnowl.mit.edu/ticket/36?format=tab
 1;
+
