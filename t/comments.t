@@ -39,8 +39,8 @@ like($ticket->history->entries->[0]->content, qr/I like moose./, "The comment lo
 can_ok($ticket => 'comment');
 ok($ticket->comment( 'I like fish.' ), "Creating comment about fish.");
 
-is(@{$ticket->history->entries}, 2, "Got two history entries.");
-like($ticket->history->entries->[1]->content, qr/fish/, "The comment looks correct.");
-like($ticket->history->entries->[0]->content, qr/moose/, "The previous comment looks correct.");
-
+can_ok( $ticket => 'comments' );
+is(@{$ticket->comments}, 2, "Got two comments.");
+like($ticket->comments->[1]->content, qr/fish/, "The comment looks correct.");
+like($ticket->comments->[0]->content, qr/moose/, "The previous comment looks correct.");
 

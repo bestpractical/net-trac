@@ -174,5 +174,16 @@ sub history {
     return $hist;
 }
 
+sub comments {
+    my $self = shift;
+    my $hist = $self->history;
+
+    my @comments;
+    for ( @{$hist->entries} ) {
+        push @comments, $_ if $_->content =~ /\S/;
+    }
+    return wantarray ? @comments : \@comments;
+}
+
 #http://barnowl.mit.edu/ticket/36?format=tab
 1;
