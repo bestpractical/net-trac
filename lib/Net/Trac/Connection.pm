@@ -54,21 +54,28 @@ sub _fetch {
 sub _die_on_error {
     my $self = shift;
     my $url  = shift;
+    my $die  = 0;
+
     if ( !$self->mech->response->is_success ) {
-        die "Server threw an error "
-            . $self->mech->response->status_line . " for "
-            . $url;
-    } elsif (
-        $self->mech->content =~ qr{
-   <div id="content" class="error">
-          <h1>(.*?)</h1>
-            <p class="message">(.*?)</p>}ismx
-        )
-    {
-        die "$1 $2";
+        warn "Server threw an error "
+             . $self->mech->response->status_line . " for "
+             . $url;
+        $die++;
     }
 
-    else { return undef }
+    if (
+        $self->mech->content =~ qr{
+    <div id="content" class="error">
+          <h1>(.*?)</h1>
+            <p class="message">(.*?)</p>}ism
+        )
+    {
+        warn "$1 $2";
+        $die++;
+    }
+
+    if ( $die ) { die "Request errored out." }
+    else        { return undef }
 }
 
 sub ensure_logged_in {
