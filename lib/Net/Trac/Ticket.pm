@@ -126,12 +126,13 @@ sub create {
     }
 }
 
-
 sub update {
     my $self = shift;
     my %args = validate(
         @_,
-        {   summary     => 0,
+        {
+            comment     => 0,
+            summary     => 0,
             reporter    => 0,
             description => 0,
             owner       => 0,
@@ -143,13 +144,12 @@ sub update {
             keywords    => 0,
             cc          => 0,
             status      => 0
-
         }
     );
 
     my ($form,$form_num)= $self->_get_update_ticket_form();
 
-    my %form = map { 'field_' . $_ => $args{$_} } keys %args;
+    my %form = map { ($_ eq 'comment' ? $_ : 'field_' . $_) => $args{$_} } keys %args;
 
     $self->connection->mech->submit_form(
         form_number => $form_num,
@@ -158,7 +158,12 @@ sub update {
 
     my $reply = $self->connection->mech->response;
     $self->load($self->id);
+}
 
+sub comment {
+    my $self = shift;
+    my ($comment) = validate_pos( @_, { type => SCALAR });
+    $self->update( comment => $comment );
 }
 
 sub history {
