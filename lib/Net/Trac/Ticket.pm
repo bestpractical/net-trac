@@ -157,7 +157,13 @@ sub update {
     );
 
     my $reply = $self->connection->mech->response;
-    $self->load($self->id);
+
+    if ( $reply->is_success ) {
+        return $self->load($self->id);
+    }
+    else {
+        return undef;
+    }
 }
 
 sub comment {

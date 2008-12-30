@@ -44,3 +44,8 @@ is(@{$ticket->comments}, 2, "Got two comments.");
 like($ticket->comments->[1]->content, qr/fish/, "The comment looks correct.");
 like($ticket->comments->[0]->content, qr/moose/, "The previous comment looks correct.");
 
+ok($ticket->update( summary => 'Summary #1 updated' ), "Updating summary.");
+like($ticket->summary, qr/Summary #1 updated/, "The summary looks correct");
+is(@{$ticket->history->entries}, 3, "Got three history entries");
+is(@{$ticket->comments}, 2, "Only two comments");
+
