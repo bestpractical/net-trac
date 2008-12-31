@@ -99,19 +99,26 @@ sub _fetch_feed {
 
 sub _csv_to_struct {
     my $self = shift;
-    my %args = validate( @_, { data => 1, key => 1 } );
+    my %args = validate( @_, { data => 1, key => 1, type => { default => 'hash' } } );
     my $csv  = Text::CSV_XS->new( { binary => 1 } );
     my $x    = $args{'data'};
     my $io   = IO::Scalar->new($x);
     my @cols = @{ $csv->getline($io) || [] };
     return unless defined $cols[0];
     $csv->column_names(@cols);
-    my $hashref;
+    my $data;
 
-    while ( my $row = $csv->getline_hr($io) ) {
-        $hashref->{ $row->{ $args{'key'} } } = $row;
+    if ( lc $args{'type'} eq 'hash' ) {
+        while ( my $row = $csv->getline_hr($io) ) {
+            $data->{ $row->{ $args{'key'} } } = $row;
+        }
     }
-    return $hashref;
+    elsif ( lc $args{'type'} eq 'array' ) {
+        while ( my $row = $csv->getline_hr($io) ) {
+            push @$data, $row;
+        }
+    }
+    return $data;
 }
 
 1;

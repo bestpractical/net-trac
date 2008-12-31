@@ -22,8 +22,8 @@ has valid_types      => ( isa => 'ArrayRef', is => 'rw' );
 has valid_components => ( isa => 'ArrayRef', is => 'rw' );
 has valid_priorities => ( isa => 'ArrayRef', is => 'rw' );
 
-our @PROPS = qw(cc component description id keywords milestone
-    owner priority reporter resolution status summary type);
+our @PROPS = qw( id summary type status priority resolution owner reporter cc
+                 description keywords component milestone version );
 
 for my $prop (@PROPS) {
     no strict 'refs';
@@ -35,14 +35,17 @@ sub load {
     my ($id) = validate_pos( @_, { type => SCALAR } );
     $self->connection->_fetch( "/ticket/" . $id . "?format=csv" );
 
-    my $content = $self->connection->mech->content;
-
-    my $stateref
-        = $self->connection->_csv_to_struct( data => \$content, key => 'id' );
+    my $content  = $self->connection->mech->content;
+    my $stateref = $self->connection->_csv_to_struct( data => \$content, key => 'id' );
     return undef unless $stateref;
-    $self->state( $stateref->{$id} );
-    return $id;
+    return $self->load_from_hashref( $stateref->{$id} );
+}
 
+sub load_from_hashref {
+    my ($self, $hash) = @_;
+    return undef unless $hash and $hash->{'id'};
+    $self->state( $hash );
+    return $hash->{'id'};
 }
 
 sub _get_new_ticket_form {
