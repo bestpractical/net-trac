@@ -151,16 +151,34 @@ sub update {
     my %args = validate(
         @_,
         {
-            comment  => 0,
+            comment         => 0,
+            no_auto_status  => { default => 0 },
             map { $_ => 0 } $self->valid_props
         }
     );
 
-#    if ( $update 
+    # Automatically set the status for default trac workflows unless
+    # we're asked not to
+    unless ( $args{'no_auto_status'} ) {
+        $args{'status'} = 'closed'
+            if $args{'resolution'} and not $args{'status'};
+        
+        $args{'status'} = 'assigned'
+            if $args{'owner'} and not $args{'status'};
+        
+        $args{'status'} = 'accepted'
+            if $args{'owner'} eq $self->connection->user
+               and not $args{'status'};
+    }
 
     my ($form,$form_num)= $self->_get_update_ticket_form();
 
-    my %form = map { ($_ eq 'comment' ? $_ : 'field_' . $_) => $args{$_} } keys %args;
+    # Copy over the values we'll be using
+    my %form = map  { "field_".$_ => $args{$_} }
+               grep { !/comment|no_auto_status/ } keys %args;
+
+    # Copy over comment too -- it's a pseudo-prop
+    $form{'comment'} = $args{'comment'};
 
     $self->connection->mech->submit_form(
         form_number => $form_num,
