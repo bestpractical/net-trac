@@ -10,7 +10,9 @@ sub get_basic_credentials {
     return ( $self->trac_user => $self->trac_password );
 }
 
-__PACKAGE__->meta->make_immutable;
+# This is commented because it breaks the class, causing it to
+# seemingly not follow HTTP redirects.
+#__PACKAGE__->meta->make_immutable;
 no Moose;
 
 1;
