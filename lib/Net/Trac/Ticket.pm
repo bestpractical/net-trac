@@ -167,7 +167,7 @@ sub update {
             if $args{'owner'} and not $args{'status'};
         
         $args{'status'} = 'accepted'
-            if $args{'owner'} eq $self->connection->user
+            if $args{'owner'} and $args{'owner'} eq $self->connection->user
                and not $args{'status'};
     }
 
