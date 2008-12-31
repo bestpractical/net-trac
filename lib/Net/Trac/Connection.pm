@@ -121,4 +121,7 @@ sub _csv_to_struct {
     return $data;
 }
 
+__PACKAGE__->meta->make_immutable;
+no Moose;
+
 1;

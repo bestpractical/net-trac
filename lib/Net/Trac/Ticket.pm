@@ -265,5 +265,9 @@ sub attachments {
 }
 
 #http://barnowl.mit.edu/ticket/36?format=tab
+
+__PACKAGE__->meta->make_immutable;
+no Moose;
+
 1;
 

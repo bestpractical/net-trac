@@ -56,4 +56,7 @@ Returns the ticket's id
 
 =cut
 
+__PACKAGE__->meta->make_immutable;
+no Moose;
+
 1;

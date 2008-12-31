@@ -88,4 +88,7 @@ This class represents a single item in a trac ticket history update
 
 =cut
 
+__PACKAGE__->meta->make_immutable;
+no Moose;
+
 1;

@@ -1,4 +1,3 @@
-
 package Net::Trac::Mechanize;
 use Moose;
 extends 'WWW::Mechanize';
@@ -10,4 +9,8 @@ sub get_basic_credentials {
     my $self = shift;
     return ( $self->trac_user => $self->trac_password );
 }
+
+__PACKAGE__->meta->make_immutable;
+no Moose;
+
 1;
