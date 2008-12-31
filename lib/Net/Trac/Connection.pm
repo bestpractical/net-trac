@@ -59,7 +59,7 @@ sub _die_on_error {
     if ( !$self->mech->response->is_success ) {
         warn "Server threw an error "
              . $self->mech->response->status_line . " for "
-             . $url;
+             . $url . "\n";
         $die++;
     }
 
@@ -70,11 +70,11 @@ sub _die_on_error {
             <p class="message">(.*?)</p>}ism
         )
     {
-        warn "$1 $2";
+        warn "$1 $2\n";
         $die++;
     }
 
-    if ( $die ) { die "Request errored out." }
+    if ( $die ) { die "Request errored out.\n" }
     else        { return undef }
 }
 
