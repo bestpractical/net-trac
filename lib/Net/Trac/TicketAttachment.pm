@@ -34,25 +34,18 @@ sub _parse_html_chunk {
 #    </dt>
 #                <dd>
 #                  Test description
+#                </dd>
     
-    $self->_fill_property( $html, 'filename', qr{<a (?:.+?) title="View attachment">(.+?)</a>} );
+    $self->filename($1) if $html =~ qr{<a (?:.+?) title="View attachment">(.+?)</a>};
     $self->url( "/raw-attachment/ticket/" . $self->ticket . "/" . $self->filename )
         if defined $self->filename;
 
-    $self->_fill_property( $html, size          => qr{<span title="(\d+) bytes">} );
-    $self->_fill_property( $html, author        => qr{added by <em>(.+?)</em>} );
-    $self->_fill_property( $html, date          => qr{<a (?:.+?) title="(.+?) in Timeline">} );
-    $self->_fill_property( $html, description   => qr{<dd>\s*(\S.*?)\s*$} );
+    $self->size($1)         if $html =~ qr{<span title="(\d+) bytes">};
+    $self->author($1)       if $html =~ qr{added by <em>(.+?)</em>};
+    $self->date($1)         if $html =~ qr{<a (?:.+?) title="(.+?) in Timeline">};
+    $self->description($1)  if $html =~ qr{<dd>\s*(\S.*?)\s*</dd>\s*$};
 
     return 1;
-}
-
-sub _fill_property {
-    my ($self, $html, $prop, $regex) = @_;
-    if ( $html =~ $regex ) {
-        $self->$prop( $1 );
-    }
-    else { warn "Unable to find attachment $prop!" }
 }
 
 sub content {

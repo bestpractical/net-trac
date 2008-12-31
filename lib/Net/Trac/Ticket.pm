@@ -238,10 +238,11 @@ sub _update_attachments {
     my $content = $self->connection->_fetch("/attachment/ticket/".$self->id."/");
     
     if ( $content =~ m{<dl class="attachments">(.+?)</dl>}is ) {
-        my $html = $1;
-        my @attachments;
+        my $html = $1 . '<dt>'; # adding a <dt> here is a hack that lets us
+                                # reliably parse this with one regex
 
-        while ( $html =~ m{<dt>(.+?)</dd>}gis ) {
+        my @attachments;
+        while ( $html =~ m{<dt>(.+?)(?=<dt>)}gis ) {
             my $fragment = $1;
             my $attachment = Net::Trac::TicketAttachment->new({
                 connection => $self->connection,
