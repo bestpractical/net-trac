@@ -121,6 +121,8 @@ sub create {
     );
 
     my $reply = $self->connection->mech->response;
+    $self->connection->_die_on_error( $reply->base->as_string );
+
     if ($reply->title =~ /^#(\d+)/) {
         my $id = $1;
         $self->load($id);
