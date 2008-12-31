@@ -39,7 +39,8 @@ is(@{$ticket->history->entries}, 1, "Got one history entry.");
 like($ticket->history->entries->[0]->content, qr/I like moose./, "The comment looks correct.");
 
 my ($fh, $filename) = tempfile();
-print $fh "A".."Z", "\n"; # 27 bytes
+my $alpha = join '', 'A'..'Z';
+print $fh "$alpha\n"; # 27 bytes
 close $fh;
 
 ok(-e $filename, "temp file exists: $filename");
@@ -52,4 +53,5 @@ is($ticket->attachments->[-1]->size, 27, "Got right size!");
 is($ticket->attachments->[-1]->author, 'hiro', "Got right author!");
 like($filename, qr/\E@{[$ticket->attachments->[-1]->filename]}\E/, "Got right filename!");
 is($ticket->attachments->[-1]->description, 'Test description', "Got right description!");
+is($ticket->attachments->[-1]->content, "$alpha\n", "Got right content!");
 

@@ -24,7 +24,7 @@ has url         => ( isa => 'Str',      is => 'rw' );
 has author      => ( isa => 'Str',      is => 'rw' );
 has size        => ( isa => 'Int',      is => 'rw' );
 
-sub _parse_html {
+sub _parse_html_chunk {
     my $self = shift;
     my $html = shift;
 
@@ -36,7 +36,7 @@ sub _parse_html {
 #                  Test description
     
     $self->_fill_property( $html, 'filename', qr{<a (?:.+?) title="View attachment">(.+?)</a>} );
-    $self->url( "/attachment/ticket/" . $self->ticket . "/" . $self->filename )
+    $self->url( "/raw-attachment/ticket/" . $self->ticket . "/" . $self->filename )
         if defined $self->filename;
 
     $self->_fill_property( $html, size          => qr{<span title="(\d+) bytes">} );
@@ -53,6 +53,11 @@ sub _fill_property {
         $self->$prop( $1 );
     }
     else { warn "Unable to find attachment $prop!" }
+}
+
+sub content {
+    my $self = shift;
+    return $self->connection->_fetch( $self->url );
 }
 
 =head1 NAME

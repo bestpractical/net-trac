@@ -245,7 +245,7 @@ sub _update_attachments {
                 connection => $self->connection,
                 ticket     => $self->id
             });
-            $attachment->_parse_html( $fragment );
+            $attachment->_parse_html_chunk( $fragment );
             push @attachments, $attachment;
         }
         $self->_attachments( \@attachments );
