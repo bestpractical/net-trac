@@ -25,10 +25,8 @@ sub parse_feed_entry {
     my $desc = $e->content->body;
 
     if ( $desc =~ s/^\s*<ul>\s*?<li>(.*?)<\/li>\s*?<\/ul>//gism ) {
-
         my $props = $1;
         $self->prop_changes( $self->_parse_props($props) );
-
     }
 
     $self->content($desc);
@@ -41,31 +39,29 @@ sub _parse_props {
     my @prop_lines = split( m#</li>\s*<li>#, $raw );
     my $props      = {};
     foreach my $line (@prop_lines) {
-        my $prop = '';
-        my $new  = '';
-        my $old  = '';
-        if ( $line
-            =~ /<strong>(.*?)<\/strong> changed from <em>(.*)<\/em> to <em>(.*)<\/em>/
-            )
-        {
+        my ($prop, $old, $new);
+        
+        if ( $line =~ m{<strong>(.*?)</strong> changed from <em>(.*)</em> to <em>(.*)</em>} ) {
             $prop = $1;
             $old  = $2;
             $new  = $3;
-        } elsif ( $line =~ /<strong>(.*?)<\/strong> set to <em>(.*)<\/em>/ ) {
+        } elsif ( $line =~ m{<strong>(.*?)</strong> set to <em>(.*)</em>} ) {
             $prop = $1;
             $old  = '';
             $new  = $2;
-        } elsif ( $line =~ /<strong>(.*?)<\/strong> deleted/ ) {
+        } elsif ( $line =~ m{<strong>(.*?)</strong> deleted} ) {
             $prop = $1;
             $new  = '';
         }
 
-        my $pc = Net::Trac::TicketPropChange->new(
-            property  => $prop,
-            new_value => $new,
-            old_value => $old
-        );
-        $props->{$prop} = $pc;
+        if ( $prop ) {
+            my $pc = Net::Trac::TicketPropChange->new(
+                property  => $prop,
+                new_value => $new,
+                old_value => $old
+            );
+            $props->{$prop} = $pc;
+        }
     }
     return $props;
 }
