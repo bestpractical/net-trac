@@ -41,15 +41,15 @@ sub _parse_props {
     foreach my $line (@prop_lines) {
         my ($prop, $old, $new);
         
-        if ( $line =~ m{<strong>(.*?)</strong> changed from <em>(.*)</em> to <em>(.*)</em>} ) {
+        if ( $line =~ m{<strong>(.*?)</strong>\s+changed\s+from\s+<em>(.*)</em>\s+to\s+<em>(.*)</em>}i ) {
             $prop = $1;
             $old  = $2;
             $new  = $3;
-        } elsif ( $line =~ m{<strong>(.*?)</strong> set to <em>(.*)</em>} ) {
+        } elsif ( $line =~ m{<strong>(.*?)</strong>\s+set\s+to\s+<em>(.*)</em>}i ) {
             $prop = $1;
             $old  = '';
             $new  = $2;
-        } elsif ( $line =~ m{<strong>(.*?)</strong> deleted} ) {
+        } elsif ( $line =~ m{<strong>(.*?)</strong>\s+deleted}i ) {
             $prop = $1;
             $new  = '';
         }
