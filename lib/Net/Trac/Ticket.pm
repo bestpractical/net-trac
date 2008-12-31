@@ -17,15 +17,23 @@ has state => (
 
 has _attachments     => ( isa => 'ArrayRef', is => 'rw' );
 
-has valid_milestones => ( isa => 'ArrayRef', is => 'rw' );
-has valid_types      => ( isa => 'ArrayRef', is => 'rw' );
-has valid_components => ( isa => 'ArrayRef', is => 'rw' );
-has valid_priorities => ( isa => 'ArrayRef', is => 'rw' );
+has valid_milestones  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+has valid_types       => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+has valid_components  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+has valid_priorities  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+has valid_resolutions => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+has valid_severities  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
 
-our @PROPS = qw( id summary type status priority resolution owner reporter cc
-                 description keywords component milestone version );
+sub basic_statuses {
+    qw( new accepted assigned reopened closed )
+}
 
-for my $prop (@PROPS) {
+sub valid_props {
+    qw( id summary type status priority severity resolution owner reporter cc
+        description keywords component milestone version )
+}
+
+for my $prop ( __PACKAGE__->valid_props ) {
     no strict 'refs';
     *{ "Net::Trac::Ticket::" . $prop } = sub { shift->state->{$prop} };
 }
@@ -86,11 +94,27 @@ sub _fetch_new_ticket_metadata {
     $self->valid_priorities(
         [ $form->find_input("field_priority")->possible_values ] );
 
-    my @inputs = $form->inputs;
+    my $severity = $form->find_input("field_severity");
+    $self->valid_severities( $severity->possible_values ) if $severity;
+    
+#    my @inputs = $form->inputs;
+#
+#    for my $in (@inputs) {
+#        my @values = $in->possible_values;
+#    }
 
-    for my $in (@inputs) {
-        my @values = $in->possible_values;
-    }
+    return 1;
+}
+
+sub _fetch_update_ticket_metadata {
+    my $self = shift;
+    my ($form, $form_num) = $self->_get_update_ticket_form;
+
+    return undef unless $form;
+
+    my $resolutions = $form->find_input("action_resolve_resolve_resolution");
+    $self->valid_resolutions( $resolutions->possible_values ) if $resolutions;
+    
     return 1;
 }
 
@@ -98,20 +122,7 @@ sub create {
     my $self = shift;
     my %args = validate(
         @_,
-        {   summary     => 0,
-            reporter    => 0,
-            description => 0,
-            owner       => 0,
-            type        => 0,
-            priority    => 0,
-            milestone   => 0,
-            component   => 0,
-            version     => 0,
-            keywords    => 0,
-            cc          => 0,
-            status      => 0
-
-        }
+        { map { $_ => 0 } grep { !/resolution/ } $self->valid_props }
     );
 
     my ($form,$form_num)  = $self->_get_new_ticket_form();
@@ -140,21 +151,12 @@ sub update {
     my %args = validate(
         @_,
         {
-            comment     => 0,
-            summary     => 0,
-            reporter    => 0,
-            description => 0,
-            owner       => 0,
-            type        => 0,
-            priority    => 0,
-            milestone   => 0,
-            component   => 0,
-            version     => 0,
-            keywords    => 0,
-            cc          => 0,
-            status      => 0
+            comment  => 0,
+            map { $_ => 0 } $self->valid_props
         }
     );
+
+#    if ( $update 
 
     my ($form,$form_num)= $self->_get_update_ticket_form();
 

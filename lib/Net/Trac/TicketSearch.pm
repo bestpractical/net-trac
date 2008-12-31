@@ -18,7 +18,7 @@ sub query {
 
     # Build a URL from the fields we want and the query
     my $url = '/query?format=csv&order=id&max=' . $self->limit;
-    $url .= '&' . join '&', map { "col=$_" } @Net::Trac::Ticket::PROPS;
+    $url .= '&' . join '&', map { "col=$_" } Net::Trac::Ticket->valid_props;
     $url .= '&' . join '&', map { "$_=".$query{$_} } keys %query;
 
     my $content = $self->connection->_fetch( $url );
