@@ -1,6 +1,7 @@
 package Net::Trac::Ticket;
 use Moose;
 use Params::Validate qw(:all);
+use Lingua::EN::Inflect qw(PL);
 
 use Net::Trac::TicketHistory;
 use Net::Trac::TicketAttachment;
@@ -46,7 +47,14 @@ sub load {
     my $content  = $self->connection->mech->content;
     my $stateref = $self->connection->_csv_to_struct( data => \$content, key => 'id' );
     return undef unless $stateref;
-    return $self->load_from_hashref( $stateref->{$id} );
+
+    my $tid = $self->load_from_hashref( $stateref->{$id} );
+
+    # Load metadata up for create and update
+    $self->_fetch_new_ticket_metadata;
+    $self->_fetch_update_ticket_metadata;
+
+    return $tid;
 }
 
 sub load_from_hashref {
@@ -95,7 +103,7 @@ sub _fetch_new_ticket_metadata {
         [ $form->find_input("field_priority")->possible_values ] );
 
     my $severity = $form->find_input("field_severity");
-    $self->valid_severities( $severity->possible_values ) if $severity;
+    $self->valid_severities( [$severity->possible_values] ) if $severity;
     
 #    my @inputs = $form->inputs;
 #
@@ -113,16 +121,37 @@ sub _fetch_update_ticket_metadata {
     return undef unless $form;
 
     my $resolutions = $form->find_input("action_resolve_resolve_resolution");
-    $self->valid_resolutions( $resolutions->possible_values ) if $resolutions;
+    $self->valid_resolutions( [$resolutions->possible_values] ) if $resolutions;
     
     return 1;
+}
+
+sub _validation_rules {
+    my $self = shift;
+    my %rules;
+    for my $prop ( @_ ) {
+        my $method = "valid_" . PL($prop);
+        if ( $self->can($method) ) {
+            my $values = join '|', map { $_ } grep { defined and length } @{$self->$method};
+            if ( length $values ) {
+                my $check = qr{^(?:$values)$}i;
+                $rules{$prop} = { type => SCALAR, regex => $check, optional => 1 };
+            } else {
+                $rules{$prop} = 0;
+            }
+        }
+        else {
+            $rules{$prop} = 0; # optional
+        }
+    }
+    return \%rules;
 }
 
 sub create {
     my $self = shift;
     my %args = validate(
         @_,
-        { map { $_ => 0 } grep { !/resolution/ } $self->valid_props }
+        $self->_validation_rules( grep { !/resolution/ } $self->valid_props )
     );
 
     my ($form,$form_num)  = $self->_get_new_ticket_form();
@@ -153,7 +182,7 @@ sub update {
         {
             comment         => 0,
             no_auto_status  => { default => 0 },
-            map { $_ => 0 } $self->valid_props
+            %{$self->_validation_rules( $self->valid_props )}
         }
     );
 

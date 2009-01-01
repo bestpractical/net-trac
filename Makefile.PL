@@ -16,6 +16,7 @@ requires 'LWP::Simple';
 requires 'Params::Validate';
 requires 'WWW::Mechanize' => '1.52';
 requires 'DateTime::Format::ISO8601';
+requires 'Lingua::EN::Inflect';
 
 auto_install;
 sign; 
