@@ -1,7 +1,7 @@
 package Net::Trac::Ticket;
 use Moose;
 use Params::Validate qw(:all);
-use Lingua::EN::Inflect qw(PL);
+use Lingua::EN::Inflect qw();
 
 use Net::Trac::TicketHistory;
 use Net::Trac::TicketAttachment;
@@ -16,7 +16,9 @@ has state => (
     is  => 'rw'
 );
 
-has _attachments     => ( isa => 'ArrayRef', is => 'rw' );
+has _attachments            => ( isa => 'ArrayRef', is => 'rw' );
+has _loaded_new_metadata    => ( isa => 'Bool',     is => 'rw' );
+has _loaded_update_metadata => ( isa => 'Bool',     is => 'rw' );
 
 has valid_milestones  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
 has valid_types       => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
@@ -39,6 +41,11 @@ for my $prop ( __PACKAGE__->valid_props ) {
     *{ "Net::Trac::Ticket::" . $prop } = sub { shift->state->{$prop} };
 }
 
+sub BUILD {
+    my $self = shift;
+    $self->_fetch_new_ticket_metadata;
+}
+
 sub load {
     my $self = shift;
     my ($id) = validate_pos( @_, { type => SCALAR } );
@@ -49,18 +56,21 @@ sub load {
     return undef unless $stateref;
 
     my $tid = $self->load_from_hashref( $stateref->{$id} );
-
-    # Load metadata up for create and update
-    $self->_fetch_new_ticket_metadata;
-    $self->_fetch_update_ticket_metadata;
-
     return $tid;
 }
 
 sub load_from_hashref {
-    my ($self, $hash) = @_;
+    my $self = shift;
+    my ($hash, $skip_metadata) = validate_pos(
+        @_,
+        { type => HASHREF },
+        { type => BOOLEAN, default => undef }
+    );
+
     return undef unless $hash and $hash->{'id'};
+
     $self->state( $hash );
+    $self->_fetch_update_ticket_metadata unless $skip_metadata;
     return $hash->{'id'};
 }
 
@@ -90,20 +100,19 @@ sub _get_update_ticket_form {
 
 sub _fetch_new_ticket_metadata {
     my $self = shift;
-    my ($form, $form_num) = $self->_get_new_ticket_form;
 
+    return 1 if $self->_loaded_new_metadata;
+
+    my ($form, $form_num) = $self->_get_new_ticket_form;
     return undef unless $form;
 
-    $self->valid_milestones(
-        [ $form->find_input("field_milestone")->possible_values ] );
-    $self->valid_types( [ $form->find_input("field_type")->possible_values ] );
-    $self->valid_components(
-        [ $form->find_input("field_component")->possible_values ] );
-    $self->valid_priorities(
-        [ $form->find_input("field_priority")->possible_values ] );
+    $self->valid_milestones([ $form->find_input("field_milestone")->possible_values ]);
+    $self->valid_types     ([ $form->find_input("field_type")->possible_values ]);
+    $self->valid_components([ $form->find_input("field_component")->possible_values ]);
+    $self->valid_priorities([ $form->find_input("field_priority")->possible_values ]);
 
     my $severity = $form->find_input("field_severity");
-    $self->valid_severities( [$severity->possible_values] ) if $severity;
+    $self->valid_severities([ $severity->possible_values ]) if $severity;
     
 #    my @inputs = $form->inputs;
 #
@@ -111,28 +120,39 @@ sub _fetch_new_ticket_metadata {
 #        my @values = $in->possible_values;
 #    }
 
+    $self->_loaded_new_metadata( 1 );
     return 1;
 }
 
 sub _fetch_update_ticket_metadata {
     my $self = shift;
-    my ($form, $form_num) = $self->_get_update_ticket_form;
 
+    return 1 if $self->_loaded_update_metadata;
+
+    my ($form, $form_num) = $self->_get_update_ticket_form;
     return undef unless $form;
 
     my $resolutions = $form->find_input("action_resolve_resolve_resolution");
     $self->valid_resolutions( [$resolutions->possible_values] ) if $resolutions;
     
+    $self->_loaded_update_metadata( 1 );
     return 1;
 }
 
-sub _validation_rules {
+sub _metadata_validation_rules {
     my $self = shift;
+    my $type = lc shift;
+
+    # Ensure that we've loaded up metadata
+    $self->_fetch_new_ticket_metadata;
+    $self->_fetch_update_ticket_metadata if $type eq 'update';
+
     my %rules;
     for my $prop ( @_ ) {
-        my $method = "valid_" . PL($prop);
+        my $method = "valid_" . Lingua::EN::Inflect::PL($prop);
         if ( $self->can($method) ) {
-            my $values = join '|', map { $_ } grep { defined and length } @{$self->$method};
+            # XXX TODO: escape the values for the regex?
+            my $values = join '|', grep { defined and length } @{$self->$method};
             if ( length $values ) {
                 my $check = qr{^(?:$values)$}i;
                 $rules{$prop} = { type => SCALAR, regex => $check, optional => 1 };
@@ -151,7 +171,7 @@ sub create {
     my $self = shift;
     my %args = validate(
         @_,
-        $self->_validation_rules( grep { !/resolution/ } $self->valid_props )
+        $self->_metadata_validation_rules( 'create' => grep { !/resolution/ } $self->valid_props )
     );
 
     my ($form,$form_num)  = $self->_get_new_ticket_form();
@@ -182,7 +202,7 @@ sub update {
         {
             comment         => 0,
             no_auto_status  => { default => 0 },
-            %{$self->_validation_rules( $self->valid_props )}
+            %{$self->_metadata_validation_rules( 'update' => $self->valid_props )}
         }
     );
 
