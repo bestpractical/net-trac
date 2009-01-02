@@ -37,6 +37,9 @@ sub valid_props {
         description keywords component milestone version time changetime )
 }
 
+sub valid_create_props { grep { !/^(?:resolution|time|changetime)$/i } $_[0]->valid_props }
+sub valid_update_props { grep { !/^(?:time|changetime)$/i } $_[0]->valid_props }
+
 for my $prop ( __PACKAGE__->valid_props ) {
     no strict 'refs';
     *{ "Net::Trac::Ticket::" . $prop } = sub { shift->state->{$prop} };
@@ -173,7 +176,7 @@ sub create {
     my $self = shift;
     my %args = validate(
         @_,
-        $self->_metadata_validation_rules( 'create' => grep { !/resolution/ } $self->valid_props )
+        $self->_metadata_validation_rules( 'create' => $self->valid_create_props )
     );
 
     my ($form,$form_num)  = $self->_get_new_ticket_form();
@@ -204,7 +207,7 @@ sub update {
         {
             comment         => 0,
             no_auto_status  => { default => 0 },
-            %{$self->_metadata_validation_rules( 'update' => $self->valid_props )}
+            %{$self->_metadata_validation_rules( 'update' => $self->valid_update_props )}
         }
     );
 

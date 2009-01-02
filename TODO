@@ -10,5 +10,4 @@ regex escape?
 grep for XXX TODO as well
 
 
-Pull ticket data from a specific search, not the ticket's own CSV
 Get history from RSS feed for a ticket
