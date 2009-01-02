@@ -256,9 +256,8 @@ sub comment {
 
 sub history {
     my $self = shift;
-    my $hist = Net::Trac::TicketHistory->new(
-        { connection => $self->connection, ticket => $self->id } );
-    $hist->load;
+    my $hist = Net::Trac::TicketHistory->new({ connection => $self->connection });
+    $hist->load( $self->id );
     return $hist;
 }
 
