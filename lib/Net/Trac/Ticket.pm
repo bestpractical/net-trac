@@ -2,6 +2,7 @@ package Net::Trac::Ticket;
 use Moose;
 use Params::Validate qw(:all);
 use Lingua::EN::Inflect qw();
+use DateTime::Format::ISO8601;
 
 use Net::Trac::TicketSearch;
 use Net::Trac::TicketHistory;
@@ -43,6 +44,16 @@ sub valid_update_props { grep { !/^(?:time|changetime)$/i } $_[0]->valid_props }
 for my $prop ( __PACKAGE__->valid_props ) {
     no strict 'refs';
     *{ "Net::Trac::Ticket::" . $prop } = sub { shift->state->{$prop} };
+}
+
+sub created       { shift->_time_to_datetime('time') }
+sub last_modified { shift->_time_to_datetime('changetime') }
+
+sub _time_to_datetime {
+    my ($self, $prop) = @_;
+    my $time = $self->$prop;
+    $time =~ s/ /T/;
+    return DateTime::Format::ISO8601->parse_datetime( $time );
 }
 
 sub BUILD {
@@ -334,8 +345,6 @@ sub attachments {
     $self->_update_attachments;
     return wantarray ? @{$self->_attachments} : $self->_attachments;
 }
-
-#http://barnowl.mit.edu/ticket/36?format=tab
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
