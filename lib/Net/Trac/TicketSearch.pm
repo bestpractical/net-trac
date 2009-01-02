@@ -16,6 +16,8 @@ sub query {
     my $self  = shift;
     my %query = @_;
 
+    my $no_objects = delete $query{'_no_objects'};
+
     # Clear current results
     $self->results([]);
 
@@ -29,14 +31,18 @@ sub query {
 
     my $data = $self->connection->_csv_to_struct( data => \$content, key => 'id', type => 'array' );
 
-    my @tickets = ();
-    for ( @{$data || []} ) {
-        my $ticket = Net::Trac::Ticket->new( connection => $self->connection );
-        my $id = $ticket->load_from_hashref( $_ );
-        push @tickets, $ticket if $id;
+    unless ( $no_objects ) {
+        my @tickets = ();
+        for ( @{$data || []} ) {
+            my $ticket = Net::Trac::Ticket->new( connection => $self->connection );
+            my $id = $ticket->load_from_hashref( $_ );
+            push @tickets, $ticket if $id;
+        }
+        return $self->results( \@tickets );
     }
-
-    return $self->results( \@tickets );
+    else {
+        return $self->results( $data );
+    }
 }
 
 __PACKAGE__->meta->make_immutable;

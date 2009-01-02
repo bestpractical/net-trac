@@ -31,3 +31,5 @@ ok($ticket->load(1));
 like($ticket->state->{'summary'}, qr/pony/);
 like($ticket->summary, qr/pony/, "The summary looks like a pony");
 ok($ticket->history, "The ticket has some history");
+ok($ticket->time, "The ticket has a created time: ".$ticket->time);
+

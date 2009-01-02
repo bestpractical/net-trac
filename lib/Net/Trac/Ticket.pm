@@ -3,6 +3,7 @@ use Moose;
 use Params::Validate qw(:all);
 use Lingua::EN::Inflect qw();
 
+use Net::Trac::TicketSearch;
 use Net::Trac::TicketHistory;
 use Net::Trac::TicketAttachment;
 
@@ -49,13 +50,14 @@ sub BUILD {
 sub load {
     my $self = shift;
     my ($id) = validate_pos( @_, { type => SCALAR } );
-    $self->connection->_fetch( "/ticket/" . $id . "?format=csv" ) or return;
 
-    my $content  = $self->connection->mech->content;
-    my $stateref = $self->connection->_csv_to_struct( data => \$content, key => 'id' );
-    return undef unless $stateref;
+    my $search = Net::Trac::TicketSearch->new( connection => $self->connection );
+    $search->limit(1);
+    $search->query( id => $id, _no_objects => 1 );
 
-    my $tid = $self->load_from_hashref( $stateref->{$id} );
+    return unless @{ $search->results };
+
+    my $tid = $self->load_from_hashref( $search->results->[0] );
     return $tid;
 }
 
