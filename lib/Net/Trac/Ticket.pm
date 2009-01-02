@@ -33,7 +33,7 @@ sub basic_statuses {
 
 sub valid_props {
     qw( id summary type status priority severity resolution owner reporter cc
-        description keywords component milestone version )
+        description keywords component milestone version time changetime )
 }
 
 for my $prop ( __PACKAGE__->valid_props ) {
@@ -49,7 +49,7 @@ sub BUILD {
 sub load {
     my $self = shift;
     my ($id) = validate_pos( @_, { type => SCALAR } );
-    $self->connection->_fetch( "/ticket/" . $id . "?format=csv" );
+    $self->connection->_fetch( "/ticket/" . $id . "?format=csv" ) or return;
 
     my $content  = $self->connection->mech->content;
     my $stateref = $self->connection->_csv_to_struct( data => \$content, key => 'id' );
@@ -77,7 +77,7 @@ sub load_from_hashref {
 sub _get_new_ticket_form {
     my $self = shift;
     $self->connection->ensure_logged_in;
-    $self->connection->_fetch("/newticket");
+    $self->connection->_fetch("/newticket") or return;
     my $i = 1; # form number
     for my $form ( $self->connection->mech->forms() ) {
         return ($form,$i) if $form->find_input('field_reporter');
@@ -89,7 +89,7 @@ sub _get_new_ticket_form {
 sub _get_update_ticket_form {
     my $self = shift;
     $self->connection->ensure_logged_in;
-    $self->connection->_fetch("/ticket/".$self->id);
+    $self->connection->_fetch("/ticket/".$self->id) or return;
     my $i = 1; # form number;
     for my $form ( $self->connection->mech->forms() ) {
         return ($form,$i) if $form->find_input('field_reporter');
@@ -184,7 +184,7 @@ sub create {
     );
 
     my $reply = $self->connection->mech->response;
-    $self->connection->_die_on_error( $reply->base->as_string );
+    $self->connection->_warn_on_error( $reply->base->as_string ) and return;
 
     if ($reply->title =~ /^#(\d+)/) {
         my $id = $1;
@@ -235,9 +235,6 @@ sub update {
     );
 
     my $reply = $self->connection->mech->response;
-
-    # XXX TODO: use _die_on_error here?
-
     if ( $reply->is_success ) {
         return $self->load($self->id);
     }
@@ -274,7 +271,7 @@ sub comments {
 sub _get_add_attachment_form {
     my $self = shift;
     $self->connection->ensure_logged_in;
-    $self->connection->_fetch("/attachment/ticket/".$self->id."/?action=new");
+    $self->connection->_fetch("/attachment/ticket/".$self->id."/?action=new") or return;
     my $i = 1; # form number;
     for my $form ( $self->connection->mech->forms() ) {
         return ($form,$i) if $form->find_input('attachment');
@@ -299,7 +296,7 @@ sub attach {
     );
 
     my $reply = $self->connection->mech->response;
-    $self->connection->_die_on_error( $reply->base->as_string );
+    $self->connection->_warn_on_error( $reply->base->as_string ) and return;
 
     return $self->attachments->[-1];
 }
@@ -307,7 +304,8 @@ sub attach {
 sub _update_attachments {
     my $self = shift;
     $self->connection->ensure_logged_in;
-    my $content = $self->connection->_fetch("/attachment/ticket/".$self->id."/");
+    my $content = $self->connection->_fetch("/attachment/ticket/".$self->id."/")
+        or return;
     
     if ( $content =~ m{<dl class="attachments">(.+?)</dl>}is ) {
         my $html = $1 . '<dt>'; # adding a <dt> here is a hack that lets us

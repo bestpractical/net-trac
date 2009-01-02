@@ -47,11 +47,12 @@ sub _fetch {
     my $query   = shift;
     my $abs_url = $self->url . $query;
     $self->mech->get($abs_url);
-    $self->_die_on_error($abs_url);
-    return $self->mech->content;
+
+    if ( $self->_warn_on_error($abs_url) ) { return }
+    else { return $self->mech->content }
 }
 
-sub _die_on_error {
+sub _warn_on_error {
     my $self = shift;
     my $url  = shift;
     my $die  = 0;
@@ -74,14 +75,15 @@ sub _die_on_error {
         $die++;
     }
 
-    if ( $die ) { die "Request errored out.\n" }
-    else        { return undef }
+    # Returns TRUE if it got an error, for nicer conditionals when calling
+    if ( $die ) { warn "Request errored out.\n"; return 1; }
+    else        { return }
 }
 
 sub ensure_logged_in {
     my $self = shift;
     if ( !defined $self->logged_in ) {
-        $self->_fetch("/login");
+        $self->_fetch("/login") or return;
         $self->logged_in(1);
     }
     return $self->logged_in;
@@ -91,8 +93,12 @@ sub ensure_logged_in {
 sub _fetch_feed {
     my $self  = shift;
     my $query = shift;
-    my $feed  = XML::Feed->parse( URI->new( $self->url . $query ) )
-        or die XML::Feed->errstr;
+    my $feed  = XML::Feed->parse( URI->new( $self->url . $query ) );
+
+    if ( not $feed ) {
+        warn XML::Feed->errstr;
+        return;
+    }
 
     return $feed;
 }

@@ -16,12 +16,17 @@ sub query {
     my $self  = shift;
     my %query = @_;
 
+    # Clear current results
+    $self->results([]);
+
     # Build a URL from the fields we want and the query
     my $url = '/query?format=csv&order=id&max=' . $self->limit;
     $url .= '&' . join '&', map { "col=$_" } Net::Trac::Ticket->valid_props;
     $url .= '&' . join '&', map { "$_=".$query{$_} } keys %query;
 
-    my $content = $self->connection->_fetch( $url );
+    my $content = $self->connection->_fetch( $url )
+        or return;
+
     my $data = $self->connection->_csv_to_struct( data => \$content, key => 'id', type => 'array' );
 
     my @tickets = ();
@@ -31,7 +36,6 @@ sub query {
         push @tickets, $ticket if $id;
     }
 
-    $self->results([]);
     return $self->results( \@tickets );
 }
 
