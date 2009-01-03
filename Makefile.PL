@@ -17,6 +17,7 @@ requires 'Params::Validate';
 requires 'WWW::Mechanize' => '1.52';
 requires 'DateTime::Format::ISO8601';
 requires 'Lingua::EN::Inflect';
+requires 'URI::Escape';
 
 auto_install;
 sign; 

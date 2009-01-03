@@ -1,4 +1,27 @@
+use strict;
+use warnings;
+
 package Net::Trac::Ticket;
+
+=head1 NAME
+
+Net::Trac::Ticket - Create, read, and update tickets on a remote Trac instance
+
+=head1 SYNOPSIS
+
+    my $ticket = Net::Trac::Ticket->new( connection => $trac );
+    $ticket->load( 1 );
+    
+    print $ticket->summary, "\n";
+
+=head1 DESCRIPTION
+
+This class represents a ticket on a remote Trac instance.  It provides methods
+for creating, reading, and updating tickets and their history as well as adding
+comments and getting attachments.
+
+=cut
+
 use Moose;
 use Params::Validate qw(:all);
 use Lingua::EN::Inflect qw();
@@ -61,6 +84,20 @@ sub BUILD {
     $self->_fetch_new_ticket_metadata;
 }
 
+=head1 METHODS
+
+=head2 new HASH
+
+Takes a key C<connection> with a value of a L<Net::Trac::Connection>.  Returns
+an empty ticket object.
+
+=head2 load ID
+
+Loads up the ticket with the specified ID.  Returns the ticket ID loaded on success
+and undef on failure.
+
+=cut
+
 sub load {
     my $self = shift;
     my ($id) = validate_pos( @_, { type => SCALAR } );
@@ -74,6 +111,13 @@ sub load {
     my $tid = $self->load_from_hashref( $search->results->[0] );
     return $tid;
 }
+
+=head2 load_from_hashref HASHREF [SKIP]
+
+You should never need to use this method yourself.  Loads a ticket from a hashref
+of data, optionally skipping metadata loading (values of C<valid_*> accessors).
+
+=cut
 
 sub load_from_hashref {
     my $self = shift;
@@ -183,6 +227,13 @@ sub _metadata_validation_rules {
     return \%rules;
 }
 
+=head2 create HASH
+
+Creates and loads a new ticket with the values specified.
+Returns undef on failure and the new ticket ID on success.
+
+=cut
+
 sub create {
     my $self = shift;
     my %args = validate(
@@ -210,6 +261,17 @@ sub create {
         return undef;
     }
 }
+
+=head2 update HASH
+
+Updates the current ticket with the specified values.  This method will
+attempt to emulate Trac's default workflow by auto-updating the status
+based on changes to other fields.  To avoid this auto-updating, specify
+a true value as the value for the key C<no_auto_status>.
+
+Returns undef on failure, and the ID of the current ticket on success.
+
+=cut
 
 sub update {
     my $self = shift;
@@ -259,11 +321,23 @@ sub update {
     }
 }
 
+=head2 comment TEXT
+
+Adds a comment to the current ticket.  Returns undef on failure, true on success.
+
+=cut
+
 sub comment {
     my $self = shift;
     my ($comment) = validate_pos( @_, { type => SCALAR });
     $self->update( comment => $comment );
 }
+
+=head2 history
+
+Returns a L<Net::Trac::TicketHistory> object for this ticket.
+
+=cut
 
 sub history {
     my $self = shift;
@@ -271,6 +345,14 @@ sub history {
     $hist->load( $self->id );
     return $hist;
 }
+
+=head2 comments
+
+Returns an array or arrayref (depending on context) of history entries which
+have comments included.  This will include history entries representing
+attachments if they have descriptions.
+
+=cut
 
 sub comments {
     my $self = shift;
@@ -294,6 +376,14 @@ sub _get_add_attachment_form {
     }
     return undef;
 }
+
+=head2 attach PARAMHASH
+
+Attaches the specified C<file> with an optional C<description>.
+Returns undef on failure and the new L<Net::Trac::TicketAttachment> object
+on success.
+
+=cut
 
 sub attach {
     my $self = shift;
@@ -340,11 +430,107 @@ sub _update_attachments {
     }
 }
 
+=head2 attachments
+
+Returns an array or arrayref (depending on context) of all the
+L<Net::Trac::TicketAttachment> objects for this ticket.
+
+=cut
+
 sub attachments {
     my $self = shift;
     $self->_update_attachments;
     return wantarray ? @{$self->_attachments} : $self->_attachments;
 }
+
+=head1 ACCESSORS
+
+=head2 connection
+
+=head2 id
+
+=head2 summary
+
+=head2 type
+
+=head2 status
+
+=head2 priority
+
+=head2 severity
+
+=head2 resolution
+
+=head2 owner
+
+=head2 reporter
+
+=head2 cc
+
+=head2 description
+
+=head2 keywords
+
+=head2 component
+
+=head2 milestone
+
+=head2 version
+
+=head2 created
+
+Returns a L<DateTime> object
+
+=head2 last_modified
+
+Returns a L<DateTime> object
+
+=head2 basic_statuses
+
+Returns a list of the basic statuses available for a ticket.  Others
+may be defined by the remote Trac instance, but we have no way of easily
+getting them.
+
+=head2 valid_props
+
+Returns a list of the valid properties of a ticket.
+
+=head2 valid_create_props
+
+Returns a list of the valid properties specifiable when creating a ticket.
+
+=head2 valid_update_props
+
+Returns a list of the valid updatable properties.
+
+=head2 Valid property values
+
+These accessors are loaded from the remote Trac instance with the valid
+values for the properties upon instantiation of a ticket object.
+
+=over
+
+=item valid_milestones
+
+=item valid_types
+
+=item valid_components
+
+=item valid_priorities
+
+=item valid_resolutions - Only loaded when a ticket is loaded.
+
+=item valid_severities - May not be provided by the Trac instance.
+
+=back
+
+=head1 LICENSE
+
+Copyright 2008-2009 Best Practical Solutions.
+
+This package is licensed under the same terms as Perl 5.8.8.
+
+=cut
 
 __PACKAGE__->meta->make_immutable;
 no Moose;

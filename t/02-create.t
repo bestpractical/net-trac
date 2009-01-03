@@ -1,7 +1,7 @@
 use warnings; 
 use strict;
 
-use Test::More qw/no_plan/;
+use Test::More tests => 16;
 use_ok('Net::Trac::Connection');
 use_ok('Net::Trac::Ticket');
 require 't/setup_trac.pl';

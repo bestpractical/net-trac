@@ -1,6 +1,41 @@
+use strict;
+use warnings;
+
 package Net::Trac::TicketHistoryEntry;
+
 use Moose;
 use Net::Trac::TicketPropChange;
+
+=head1 NAME
+
+Net::Trac::TicketHistoryEntry - A single history entry for a Trac ticket
+
+=head1 DESCRIPTION
+
+This class represents a single item in a Trac ticket history.
+
+=head1 ACCESSORS
+
+=head2 connection
+
+Returns a L<Net::Trac::Connection>.
+
+=head2 author
+
+=head2 date
+
+Returns a L<DateTime> object.
+
+=head2 category
+
+=head2 content
+
+=head2 prop_changes
+
+Returns a hashref (property names as the keys) of
+L<Net::Trac::TicketPropChange>s associated with this history entry.
+
+=cut
 
 has connection => (
     isa => 'Net::Trac::Connection',
@@ -13,6 +48,15 @@ has author   => ( isa => 'Str',      is => 'rw' );
 has date     => ( isa => 'DateTime', is => 'rw' );
 has category => ( isa => 'Str',      is => 'rw' );
 has content  => ( isa => 'Str',      is => 'rw' );
+
+=head1 METHODS
+
+=head2 parse_feed_entry
+
+Takes an L<XML::Feed::Entry> from a ticket history feed and parses it to fill
+out the fields of this class.
+
+=cut
 
 sub parse_feed_entry {
     my $self = shift;
@@ -66,25 +110,11 @@ sub _parse_props {
     return $props;
 }
 
-=head1 NAME
+=head1 LICENSE
 
-Net::Trac::TicketHistoryEntry
+Copyright 2008-2009 Best Practical Solutions.
 
-=head1 DESCRIPTION
-
-This class represents a single item in a trac ticket history update
-
-=head1 METHODS
-
-=head2 author
-
-=head2 date
-
-=head2 category
-
-=head2 content
-
-=head2 prop_changes
+This package is licensed under the same terms as Perl 5.8.8.
 
 =cut
 

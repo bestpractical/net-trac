@@ -1,7 +1,7 @@
 use warnings; 
 use strict;
 
-use Test::More qw/no_plan/;
+use Test::More tests => 29;
 use_ok('Net::Trac::Connection');
 use_ok('Net::Trac::Ticket');
 use_ok('Net::Trac::TicketSearch');

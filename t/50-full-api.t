@@ -1,4 +1,4 @@
-use Test::More qw/no_plan/;
+use Test::More tests => 24;
 use_ok('Net::Trac::Connection');
 use_ok('Net::Trac::Ticket');
 require 't/setup_trac.pl';
