@@ -9,7 +9,7 @@ use File::Temp qw/tempdir/;
 use LWP::Simple qw/get/;
 use Time::HiRes qw/usleep/;
 
-
+#my $x = __PACKAGE__->new(); $x->start_test_server(); warn $x->url; sleep 999;
 sub new {
     my $class = shift;
     my $self = {};
@@ -21,10 +21,9 @@ sub start_test_server {
 my $self = shift;
 
 $self->port( int(60000 + rand(2000)));
-$self->dir(tempdir( CLEANUP => 0));
+$self->dir(tempdir( CLEANUP => 1));
 $self->init;
 $self->daemonize;
-
 return $self->_did_server_start;
 }
 
