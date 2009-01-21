@@ -79,7 +79,7 @@ sub parse_feed_entry {
 
 sub _parse_props {
     my $self       = shift;
-    my $raw        = shift;
+    my $raw        = shift || '';
     my @prop_lines = split( m#</li>\s*<li>#, $raw );
     my $props      = {};
     foreach my $line (@prop_lines) {
