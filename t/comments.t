@@ -37,13 +37,14 @@ is(@{$ticket->history->entries}, 1, "Got one history entry.");
 like($ticket->history->entries->[0]->content, qr/I like moose./, "The comment looks correct.");
 
 can_ok($ticket => 'comment');
+sleep(1); # trac can't accept two updates within 1 second on the same ticket.
 ok($ticket->comment( 'I like fish.' ), "Creating comment about fish.");
 
 can_ok( $ticket => 'comments' );
 is(@{$ticket->comments}, 2, "Got two comments.");
 like($ticket->comments->[1]->content, qr/fish/, "The comment looks correct.");
 like($ticket->comments->[0]->content, qr/moose/, "The previous comment looks correct.");
-
+sleep(1);
 ok($ticket->update( summary => 'Summary #1 updated' ), "Updating summary.");
 like($ticket->summary, qr/Summary #1 updated/, "The summary looks correct");
 is(@{$ticket->history->entries}, 3, "Got three history entries");

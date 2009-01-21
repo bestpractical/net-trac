@@ -44,7 +44,7 @@ is(@{$search->results}, 1, "Got one result");
 isa_ok($search->results->[0], 'Net::Trac::Ticket');
 is($search->results->[0]->id, 1, "Got id");
 is($search->results->[0]->status, 'closed', "Got status");
-
+sleep(1); # trac can't have two updates within one second
 ok($ticket->update( resolution => 'fixed' ), "resolution = fixed");
 is(@{$ticket->history->entries}, 2, "Got two history entries");
 is($ticket->resolution, 'fixed', "Got updated resolution");
