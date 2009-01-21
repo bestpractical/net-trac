@@ -1,1 +1,7 @@
 TODO
+blib
+pm_to_blib
+.swp$
+~$
+.tmp$
+.bak$
