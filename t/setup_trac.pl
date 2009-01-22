@@ -102,6 +102,7 @@ close $htpasswd;
 
 sub kill_trac {
     my $self = shift;
+    return unless $self->pid;
     kill 1, $self->pid;
 
 }

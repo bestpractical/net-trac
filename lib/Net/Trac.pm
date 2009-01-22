@@ -4,7 +4,7 @@ use warnings;
 package Net::Trac;
 use Moose;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Net::Trac::Connection;
 use Net::Trac::Ticket;

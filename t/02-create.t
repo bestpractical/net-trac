@@ -1,7 +1,11 @@
 use warnings; 
 use strict;
 
-use Test::More tests => 16;
+use Test::More;
+
+unless (`which trac-admin`) { plan skip_all => 'You need trac installed to run the tests'; }
+plan tests => 16;
+
 use_ok('Net::Trac::Connection');
 use_ok('Net::Trac::Ticket');
 require 't/setup_trac.pl';
