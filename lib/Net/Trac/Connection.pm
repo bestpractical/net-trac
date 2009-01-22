@@ -114,10 +114,31 @@ sub ensure_logged_in {
     my $self = shift;
     if ( !defined $self->logged_in ) {
         $self->_fetch("/login") or return;
+
+        my ($form, $form_num) = $self->_find_login_form();
+    if ($form_num) {
+        $self->mech->submit_form(
+        form_number => $form_num,
+        fields => { user => $self->user, password => $self->password, submit => 1 }
+     );
+        }
+ 
+        
         $self->logged_in(1);
     }
     return $self->logged_in;
 }
+
+
+sub _find_login_form {
+    my $self = shift;
+        my $i = 1;
+        for my $form ( $self->mech->forms() ) {
+                return ($form,$i) if $form->find_input('user');
+                 $i++;
+        }
+}
+
 
 =head1 PRIVATE METHODS
 
@@ -135,7 +156,7 @@ sub _fetch {
     my $abs_url = $self->url . $query;
     $self->mech->get($abs_url);
 
-    if ( $self->_warn_on_error($abs_url) ) { return }
+    if ( $self->_warn_on_error($abs_url) ) { warn "FAIL"; return }
     else { return $self->mech->content }
 }
 
