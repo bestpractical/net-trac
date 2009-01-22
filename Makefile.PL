@@ -7,6 +7,7 @@ all_from 'lib/Net/Trac.pm';
 license  'perl';
 
 requires 'Moose';
+requires 'MooseX::ClassAttribute';
 requires 'Moose::Util::TypeConstraints';
 requires 'URI';
 requires 'IO::Scalar';

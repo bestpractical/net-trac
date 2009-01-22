@@ -23,6 +23,7 @@ comments and getting attachments.
 =cut
 
 use Moose;
+use MooseX::ClassAttribute;
 use Params::Validate qw(:all);
 use Lingua::EN::Inflect qw();
 use DateTime::Format::ISO8601;
@@ -42,24 +43,21 @@ has state => (
 );
 
 has _attachments            => ( isa => 'ArrayRef', is => 'rw' );
-has _loaded_new_metadata    => ( isa => 'Bool',     is => 'rw' );
-has _loaded_update_metadata => ( isa => 'Bool',     is => 'rw' );
 
-has valid_milestones  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
-has valid_types       => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
-has valid_components  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
-has valid_priorities  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
-has valid_resolutions => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
-has valid_severities  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+class_has _loaded_new_metadata    => ( isa => 'Bool',     is => 'rw' );
+class_has _loaded_update_metadata => ( isa => 'Bool',     is => 'rw' );
 
-sub basic_statuses {
-    qw( new accepted assigned reopened closed )
-}
+class_has valid_milestones  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+class_has valid_types       => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+class_has valid_components  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+class_has valid_priorities  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+class_has valid_resolutions => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+class_has valid_severities  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
 
-sub valid_props {
-    qw( id summary type status priority severity resolution owner reporter cc
-        description keywords component milestone version time changetime )
-}
+sub basic_statuses { qw( new accepted assigned reopened closed ) }
+
+sub valid_props { qw( id summary type status priority severity resolution owner reporter cc
+        description keywords component milestone version time changetime ) }
 
 sub valid_create_props { grep { !/^(?:resolution|time|changetime)$/i } $_[0]->valid_props }
 sub valid_update_props { grep { !/^(?:time|changetime)$/i } $_[0]->valid_props }
@@ -81,7 +79,7 @@ sub _time_to_datetime {
 
 sub BUILD {
     my $self = shift;
-    $self->_fetch_new_ticket_metadata;
+    $self->_fetch_new_ticket_metadata unless ($self->_loaded_new_metadata);
 }
 
 =head1 METHODS
@@ -140,7 +138,7 @@ sub _get_new_ticket_form {
     $self->connection->_fetch("/newticket") or return;
     my $i = 1; # form number
     for my $form ( $self->connection->mech->forms() ) {
-        return ($form,$i) if $form->find_input('field_reporter');
+        return ($form,$i) if $form->find_input('field_summary');
         $i++;
     }
     return undef;
@@ -152,7 +150,7 @@ sub _get_update_ticket_form {
     $self->connection->_fetch("/ticket/".$self->id) or return;
     my $i = 1; # form number;
     for my $form ( $self->connection->mech->forms() ) {
-        return ($form,$i) if $form->find_input('field_reporter');
+        return ($form,$i) if $form->find_input('field_summary');
         $i++;
     }
     return undef;
@@ -173,13 +171,6 @@ sub _fetch_new_ticket_metadata {
 
     my $severity = $form->find_input("field_severity");
     $self->valid_severities([ $severity->possible_values ]) if $severity;
-    
-#    my @inputs = $form->inputs;
-#
-#    for my $in (@inputs) {
-#        my @values = $in->possible_values;
-#    }
-
     $self->_loaded_new_metadata( 1 );
     return 1;
 }
@@ -204,8 +195,8 @@ sub _metadata_validation_rules {
     my $type = lc shift;
 
     # Ensure that we've loaded up metadata
-    $self->_fetch_new_ticket_metadata;
-    $self->_fetch_update_ticket_metadata if $type eq 'update';
+    $self->_fetch_new_ticket_metadata unless ($self->_loaded_new_metadata);
+    $self->_fetch_update_ticket_metadata if ( ( $type eq 'update' ) && ! $self->_loaded_update_metadata);
 
     my %rules;
     for my $prop ( @_ ) {
