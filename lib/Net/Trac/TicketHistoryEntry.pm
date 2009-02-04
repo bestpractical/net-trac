@@ -67,8 +67,7 @@ sub parse_feed_entry {
     $self->category( $e->category );
 
     my $desc = $e->content->body;
-
-    if ( $desc =~ s/^\s*<ul>\s*?<li>(.*?)<\/li>\s*?<\/ul>//gism ) {
+    if ( $desc =~ s|^\s*?<ul>(.*)</ul>||is) {
         my $props = $1;
         $self->prop_changes( $self->_parse_props($props) );
     }
@@ -80,22 +79,30 @@ sub parse_feed_entry {
 sub _parse_props {
     my $self       = shift;
     my $raw        = shift || '';
-    my @prop_lines = split( m#</li>\s*<li>#, $raw );
+    # throw out the wrapping <li>
+   $raw =~ s|^\s*?<li>(.*)</li>\s*?$|$1|is;
+    my @prop_lines = split( m#</li>\s*<li>#s, $raw );
     my $props      = {};
+
     foreach my $line (@prop_lines) {
         my ($prop, $old, $new);
-        
-        if ( $line =~ m{<strong>(.*?)</strong>\s+changed\s+from\s+<em>(.*)</em>\s+to\s+<em>(.*)</em>}i ) {
+        if ( $line =~ m{<strong>(.*?)</strong>\s+changed\s+from\s+<em>(.*)</em>\s+to\s+<em>(.*)</em>}is ) {
             $prop = $1;
             $old  = $2;
             $new  = $3;
-        } elsif ( $line =~ m{<strong>(.*?)</strong>\s+set\s+to\s+<em>(.*)</em>}i ) {
+        } elsif ( $line =~ m{<strong>(.*?)</strong>\s+set\s+to\s+<em>(.*)</em>}is ) {
             $prop = $1;
             $old  = '';
             $new  = $2;
-        } elsif ( $line =~ m{<strong>(.*?)</strong>\s+deleted}i ) {
+        } elsif ( $line =~ m{<strong>(.*?)</strong>\s+<em>(.*?)</em>\s+deleted}is ) {
+            $prop = $1;
+            $old = $2;
+            $new  = '';
+        } elsif ( $line =~ m{<strong>(.*?)</strong>\s+deleted}is ) {
             $prop = $1;
             $new  = '';
+        } else {
+            warn "could not  parse ". $line;
         }
 
         if ( $prop ) {
@@ -105,6 +112,8 @@ sub _parse_props {
                 old_value => $old
             );
             $props->{$prop} = $pc;
+        } else {
+            warn "I found no prop in $line";
         }
     }
     return $props;
