@@ -1,4 +1,14 @@
-we should really cache validation data in the Connection.
-or just not use it at all
+Samples of failed parses from the Parrot Trac 
 
-regex escape?
+
+
+My ticket id is 31 at /Users/jesse/git/bps/sd.git/lib/App/SD/Replica/trac/PullEncoder.pm line 165.
+could not  parse <strong>description</strong>
+              modified (<a href="/parrot/ticket/35?action=diff&amp;version=1">diff</a>)
+
+My ticket id is 20 at /Users/jesse/git/bps/sd.git/lib/App/SD/Replica/trac/PullEncoder.pm line 165.
+could not  parse <strong>keywords</strong>
+              <em>pirc</em> added
+
+could not  parse <strong>keywords</strong>
+              <em>PCC</em> added; <em>parrot</em> <em>calling</em> <em>conventions</em> removed
