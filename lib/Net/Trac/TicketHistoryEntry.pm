@@ -93,18 +93,27 @@ sub _parse_props {
 
     foreach my $line (@prop_lines) {
         my ($prop, $old, $new);
+        if ($line =~ m{<strong>attachment</strong>}) {
+            # we can't handle trac's "attahcment changes" messages yet
+            next;
+        }
+        if ($line =~ m{<strong>description</strong>}) {
+            # We can't parse trac's crazy "go read a diff on a webpage handling 
+            # of descriptions
+            next; 
+        }
         if ($line =~ m{<strong>keywords</strong>(.*)$}is ) {
             my $value_changes = $1;
             $prop = 'keywords';
             my (@added, @removed);
-            if ($value_changes =~ m{^\s*<em>(.*?)</em> added;?}is) {
+            if ($value_changes =~ m{^\s*<em>(.*?)</em> added}is) {
                     my $added = $1;
                     @added = split(m{</em>\s*<em>}is, $added);
                 }  
 
-            if ($value_changes =~ m{(?:^|;)\s*<em>(.*)</em> removed}is) {
+            if ($value_changes =~ m{(?:^|added;)\s*<em>(.*)</em> removed}is) {
                     my $removed = $1;
-                    @removed = split(m{</em>\s*<em>}is, $removed);
+                    @removed = split(m{</em>\s*?<em>}is, $removed);
 
             }
           
