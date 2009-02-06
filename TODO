@@ -1,8 +1,13 @@
+KNOWN ISSUES
+
+    * reverse engineering a proper history of trac's "Description" field is hard. 
+    * Patches welcome
+
+
 Samples of failed parses from the Parrot Trac 
 
 
 
-My ticket id is 31 at /Users/jesse/git/bps/sd.git/lib/App/SD/Replica/trac/PullEncoder.pm line 165.
 could not  parse <strong>description</strong>
               modified (<a href="/parrot/ticket/35?action=diff&amp;version=1">diff</a>)
 

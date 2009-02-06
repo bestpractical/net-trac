@@ -42,6 +42,21 @@ has state => (
     is  => 'rw'
 );
 
+
+has history => (
+    isa     => 'Net::Trac::TicketHistory',
+    is => 'rw',
+    default => sub {
+        my $self = shift;
+        my $hist = Net::Trac::TicketHistory->new( { connection => $self->connection } );
+        $hist->load($self);
+        return $hist;
+    },
+    lazy => 1
+);
+
+
+
 has _attachments            => ( isa => 'ArrayRef', is => 'rw' );
 
 class_has _loaded_new_metadata    => ( isa => 'Bool',     is => 'rw' );
@@ -106,9 +121,22 @@ sub load {
 
     return unless @{ $search->results };
 
-    my $tid = $self->load_from_hashref( $search->results->[0] );
+    my $ticket_data = $search->results->[0];
+    $self->_tweak_ticket_data_for_load($ticket_data);
+
+    my $tid = $self->load_from_hashref( $ticket_data);
     return $tid;
 }
+
+# We force an order on the keywords prop since trac doesn't let us
+# really know what the order used to be
+sub _tweak_ticket_data_for_load {
+    my $self = shift;
+    my $ticket = shift;
+    $ticket->{keywords} = join(' ', sort ( split ( /\s+/,$ticket->{keywords})));
+
+}
+
 
 =head2 load_from_hashref HASHREF [SKIP]
 
@@ -302,9 +330,9 @@ sub update {
         form_number => $form_num,
         fields => { %form, submit => 1 }
     );
-
     my $reply = $self->connection->mech->response;
     if ( $reply->is_success ) {
+        delete $self->{history}; # ICK. I really want a Moose "reset to default"
         return $self->load($self->id);
     }
     else {
@@ -330,12 +358,6 @@ Returns a L<Net::Trac::TicketHistory> object for this ticket.
 
 =cut
 
-sub history {
-    my $self = shift;
-    my $hist = Net::Trac::TicketHistory->new({ connection => $self->connection });
-    $hist->load( $self->id );
-    return $hist;
-}
 
 =head2 comments
 
@@ -393,6 +415,7 @@ sub attach {
 
     my $reply = $self->connection->mech->response;
     $self->connection->_warn_on_error( $reply->base->as_string ) and return;
+    delete $self->{history}; # ICK. I really want a Moose "reset to default"
 
     return $self->attachments->[-1];
 }

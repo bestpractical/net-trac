@@ -45,7 +45,7 @@ has connection => (
     is  => 'ro'
 );
 
-has ticket  => ( isa => 'Int',      is => 'rw' );
+has ticket  => ( isa => 'Net::Trac::Ticket',      is => 'rw', weak_ref => 1);
 has entries => ( isa => 'ArrayRef', is => 'rw' );
 
 =head1 METHODS
@@ -58,19 +58,24 @@ Loads the history of the specified ticket.
 
 sub load {
     my $self = shift;
-    my ($id) = validate_pos( @_, { type => SCALAR } );
+    my ($ticket_obj) = validate_pos( @_, 1);
 
-    $self->ticket( $id );
+    $self->ticket( $ticket_obj );
 
-    my $feed = $self->connection->_fetch_feed( "/ticket/$id?format=rss" )
+    # Clone the ticket state so we can morph it backwards to reverse engineer
+    # keywords
+    my $temp_state = { %{ $ticket_obj->state()}};
+
+    my $feed = $self->connection->_fetch_feed( "/ticket/@{[$ticket_obj->id]}?format=rss" )
         or return;
 
-    my @entries = $feed->entries;
     my @history;
-    foreach my $entry (@entries) {
+    # Work on the newest entry first so we can back-calculate from the current state
+    foreach my $entry (reverse $feed->entries ) {
         my $e = Net::Trac::TicketHistoryEntry->new({ connection => $self->connection });
-        $e->parse_feed_entry($entry);
-        push @history, $e;
+        $e->parse_feed_entry($entry, $temp_state);
+        # newest entry should be at the front of the list in the history later
+        unshift @history, $e;
     }
 
     $self->entries( \@history );

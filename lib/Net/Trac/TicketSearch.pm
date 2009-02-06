@@ -97,9 +97,10 @@ sub query {
 
     unless ( $no_objects ) {
         my @tickets = ();
-        for ( @{$data || []} ) {
+        for my $ticket_data ( @{$data || []} ) {
             my $ticket = Net::Trac::Ticket->new( connection => $self->connection );
-            my $id = $ticket->load_from_hashref( $_ );
+            $ticket->_tweak_ticket_data_for_load($ticket_data);
+            my $id = $ticket->load_from_hashref( $ticket_data );
             push @tickets, $ticket if $id;
         }
         return $self->results( \@tickets );
