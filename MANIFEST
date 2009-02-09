@@ -32,6 +32,7 @@ t/99-pod-coverage.t
 t/99-pod.t
 t/attachments.t
 t/comments.t
+t/keywords.t
 t/parse_props.t
 t/search.t
 t/setup_trac.pl

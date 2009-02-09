@@ -1,3 +1,47 @@
+0.06 Mon Feb  9 13:44:37 EST 2009
+
+BUGFIX
+======
+
+ * parsing improvements to deal with issues discovered parsing parrot
+   trac - jesse
+
+FEATURE
+=======
+
+ * Support login with Trac's cookie auth - jesse
+
+ * Skip transaction history types we don't know how to deal with - jesse
+
+INSTALL
+=======
+
+ * Remove coerce - jesse
+
+ * Removing MooseX::ClassAttribute - jesse
+
+ * Switch to Any::Moose, so we can use Mouse for memory and cpu
+   savings! - jesse
+
+ * Starting to work on removing MooseX::ClassAccessor Working on props
+   parsing - jesse
+
+PERFORMANCE
+===========
+
+ * Better caching of ticket history. Properish handling of the keywords
+   filed - jesse
+
+ * Improve performance of ticket ops by caching static data Improve detection
+   of ticket update/create forms when the user doesn't have the right to set
+   the requestor - jesse
+
+TESTING
+=======
+
+ * added tests for keywords - jesse
+
+
 0.05 Thu Jan 22 12:11:45 EST 2009
 
 Don't hurt cpan-testers build boxes by trying to kill process undef.

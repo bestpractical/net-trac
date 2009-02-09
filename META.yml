@@ -27,4 +27,4 @@ requires:
   XML::Feed: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.05
+version: 0.06
