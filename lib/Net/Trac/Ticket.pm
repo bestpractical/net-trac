@@ -59,8 +59,10 @@ has history => (
 
 has _attachments            => ( isa => 'ArrayRef', is => 'rw' );
 
-class_has _loaded_new_metadata    => ( isa => 'Bool',     is => 'rw' );
-class_has _loaded_update_metadata => ( isa => 'Bool',     is => 'rw' );
+our $LOADED_NEW_METADATA =0;
+our $LOADED_UPDATE_METADATA =0;
+
+
 
 class_has valid_milestones  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
 class_has valid_types       => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
@@ -94,7 +96,7 @@ sub _time_to_datetime {
 
 sub BUILD {
     my $self = shift;
-    $self->_fetch_new_ticket_metadata unless ($self->_loaded_new_metadata);
+    $self->_fetch_new_ticket_metadata unless ($LOADED_NEW_METADATA);
 }
 
 =head1 METHODS
@@ -187,7 +189,7 @@ sub _get_update_ticket_form {
 sub _fetch_new_ticket_metadata {
     my $self = shift;
 
-    return 1 if $self->_loaded_new_metadata;
+    return 1 if $LOADED_NEW_METADATA;
 
     my ($form, $form_num) = $self->_get_new_ticket_form;
     return undef unless $form;
@@ -199,14 +201,14 @@ sub _fetch_new_ticket_metadata {
 
     my $severity = $form->find_input("field_severity");
     $self->valid_severities([ $severity->possible_values ]) if $severity;
-    $self->_loaded_new_metadata( 1 );
+    $LOADED_NEW_METADATA++;
     return 1;
 }
 
 sub _fetch_update_ticket_metadata {
     my $self = shift;
 
-    return 1 if $self->_loaded_update_metadata;
+    return 1 if $LOADED_UPDATE_METADATA;
 
     my ($form, $form_num) = $self->_get_update_ticket_form;
     return undef unless $form;
@@ -214,7 +216,7 @@ sub _fetch_update_ticket_metadata {
     my $resolutions = $form->find_input("action_resolve_resolve_resolution");
     $self->valid_resolutions( [$resolutions->possible_values] ) if $resolutions;
     
-    $self->_loaded_update_metadata( 1 );
+    $LOADED_UPDATE_METADATA++;
     return 1;
 }
 
@@ -223,8 +225,8 @@ sub _metadata_validation_rules {
     my $type = lc shift;
 
     # Ensure that we've loaded up metadata
-    $self->_fetch_new_ticket_metadata unless ($self->_loaded_new_metadata);
-    $self->_fetch_update_ticket_metadata if ( ( $type eq 'update' ) && ! $self->_loaded_update_metadata);
+    $self->_fetch_new_ticket_metadata unless $LOADED_NEW_METADATA;
+    $self->_fetch_update_ticket_metadata if ( ( $type eq 'update' ) && ! $LOADED_UPDATE_METADATA);
 
     my %rules;
     for my $prop ( @_ ) {

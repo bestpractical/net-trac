@@ -102,9 +102,9 @@ sub _parse_props {
             # of descriptions
             next; 
         }
-        if ($line =~ m{<strong>keywords</strong>(.*)$}is ) {
-            my $value_changes = $1;
-            $prop = 'keywords';
+        if ($line =~ m{<strong>(keywords|cc)</strong>(.*)$}is ) {
+            my $value_changes = $2;
+            $prop = $1;
             my (@added, @removed);
             if ($value_changes =~ m{^\s*<em>(.*?)</em> added}is) {
                     my $added = $1;
@@ -126,7 +126,7 @@ sub _parse_props {
 
             $old = join(' ', sort (@before, @removed));
             $new = join(' ', sort (@after));
-            $ticket_state->{keywords} = $old;
+            $ticket_state->{$prop} = $old;
         }
         elsif ( $line =~ m{<strong>(.*?)</strong>\s+changed\s+from\s+<em>(.*)</em>\s+to\s+<em>(.*)</em>}is ) {
             $prop = $1;
