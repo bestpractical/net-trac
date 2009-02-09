@@ -4,7 +4,6 @@ use warnings;
 package Net::Trac::TicketAttachment;
 
 use Moose;
-use Moose::Util::TypeConstraints;
 use DateTime::Format::ISO8601;
 
 =head1 NAME
@@ -51,21 +50,9 @@ Returns a L<DateTime> object.
 
 =cut
 
-has connection => (
-    isa => 'Net::Trac::Connection',
-    is  => 'ro'
-);
-
-subtype 'DateTime' => as 'Object' => where { $_->isa('DateTime') };
-coerce  'DateTime' => from 'Str'  => via {
-    # Trac formats ISO8601 dates wrong
-    s/Z//;
-    s/([+-]\d\d)(\d\d)$/$1:$2/;
-    DateTime::Format::ISO8601->parse_datetime( $_ );
-};
-
+has connection => ( isa => 'Net::Trac::Connection', is => 'ro' );
 has ticket      => ( isa => 'Int',      is => 'ro' );
-has date        => ( isa => 'DateTime', is => 'rw', coerce => 1 );
+has date        => ( isa => 'DateTime', is => 'rw' );
 has filename    => ( isa => 'Str',      is => 'rw' );
 has description => ( isa => 'Str',      is => 'rw' );
 has url         => ( isa => 'Str',      is => 'rw' );
@@ -92,15 +79,20 @@ sub _parse_html_chunk {
 #                <dd>
 #                  Test description
 #                </dd>
-    
+
     $self->filename($1) if $html =~ qr{<a (?:.+?) title="View attachment">(.+?)</a>};
     $self->url( "/raw-attachment/ticket/" . $self->ticket . "/" . $self->filename )
         if defined $self->filename;
 
-    $self->size($1)         if $html =~ qr{<span title="(\d+) bytes">};
-    $self->author($1)       if $html =~ qr{added by <em>(.+?)</em>};
-    $self->date($1)         if $html =~ qr{<a (?:.+?) title="(.+?) in Timeline">};
-    $self->description($1)  if $html =~ qr{<dd>\s*(\S.*?)\s*</dd>\s*$};
+    $self->size($1)   if $html =~ qr{<span title="(\d+) bytes">};
+    $self->author($1) if $html =~ qr{added by <em>(.+?)</em>};
+    if ( $html =~ qr{<a (?:.+?) title="(.+?) in Timeline">} ) {
+        my $scalar_date = $1;
+        $scalar_date =~ s/Z//;
+        $scalar_date =~ s/([+-]\d\d)(\d\d)$/$1:$2/;
+        $self->date( DateTime::Format::ISO8601->parse_datetime($scalar_date) );
+    }
+    $self->description($1) if $html =~ qr{<dd>\s*(\S.*?)\s*</dd>\s*$};
 
     return 1;
 }
