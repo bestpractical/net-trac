@@ -23,7 +23,6 @@ comments and getting attachments.
 =cut
 
 use Moose;
-use MooseX::ClassAttribute;
 use Params::Validate qw(:all);
 use Lingua::EN::Inflect qw();
 use DateTime::Format::ISO8601;
@@ -63,13 +62,16 @@ our $LOADED_NEW_METADATA =0;
 our $LOADED_UPDATE_METADATA =0;
 
 
-
-class_has valid_milestones  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
-class_has valid_types       => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
-class_has valid_components  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
-class_has valid_priorities  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
-class_has valid_resolutions => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
-class_has valid_severities  => ( isa => 'ArrayRef', is => 'rw', default => sub {[]} );
+our (
+    $_VALID_MILESTONES, $_VALID_TYPES,       $_VALID_COMPONENTS,
+    $_VALID_PRIORITIES, $_VALID_RESOLUTIONS, $_VALID_SEVERITIES
+);
+sub valid_milestones { shift; $_VALID_MILESTONES = shift if (@_); return $_VALID_MILESTONES || [] }
+sub valid_types      { shift; $_VALID_TYPES      = shift if (@_); return $_VALID_TYPES ||[]}
+sub valid_components { shift; $_VALID_COMPONENTS = shift if (@_); return $_VALID_COMPONENTS || [] }
+sub valid_priorities { shift; $_VALID_PRIORITIES = shift if (@_); return $_VALID_PRIORITIES || [] }
+sub valid_resolutions { shift; $_VALID_RESOLUTIONS = shift if (@_); return $_VALID_RESOLUTIONS || []; }
+sub valid_severities { shift; $_VALID_SEVERITIES = shift if (@_); return $_VALID_SEVERITIES || [] }
 
 sub basic_statuses { qw( new accepted assigned reopened closed ) }
 
