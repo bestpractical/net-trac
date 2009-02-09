@@ -14,13 +14,11 @@ no_index:
     - inc
     - t
 requires:
+  Any::Moose: 0
   DateTime::Format::ISO8601: 0
   IO::Scalar: 0
   LWP::Simple: 0
   Lingua::EN::Inflect: 0
-  Moose: 0
-  Moose::Util::TypeConstraints: 0
-  MooseX::ClassAttribute: 0
   Params::Validate: 0
   Text::CSV_XS: 0
   URI: 0

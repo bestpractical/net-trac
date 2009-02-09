@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package Net::Trac::TicketSearch;
-use Moose;
+use Any::Moose;
 use Params::Validate qw(:all);
 use URI::Escape qw(uri_escape);
 
@@ -157,7 +157,7 @@ This package is licensed under the same terms as Perl 5.8.8.
 =cut
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
+no Any::Moose;
 
 1;
 

@@ -14,7 +14,7 @@ when accessing a Trac instance.
 
 =cut
 
-use Moose;
+use Any::Moose;
 extends 'WWW::Mechanize';
 
 =head1 ACCESSORS / MUTATORS
@@ -52,6 +52,6 @@ This package is licensed under the same terms as Perl 5.8.8.
 # This is commented because it breaks the class, causing it to
 # seemingly not follow HTTP redirects.
 #__PACKAGE__->meta->make_immutable;
-no Moose;
+no Any::Moose;
 
 1;

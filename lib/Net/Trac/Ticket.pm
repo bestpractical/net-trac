@@ -22,7 +22,7 @@ comments and getting attachments.
 
 =cut
 
-use Moose;
+use Any::Moose;
 use Params::Validate qw(:all);
 use Lingua::EN::Inflect qw();
 use DateTime::Format::ISO8601;
@@ -336,7 +336,7 @@ sub update {
     );
     my $reply = $self->connection->mech->response;
     if ( $reply->is_success ) {
-        delete $self->{history}; # ICK. I really want a Moose "reset to default"
+        delete $self->{history}; # ICK. I really want a Any::Moose "reset to default"
         return $self->load($self->id);
     }
     else {
@@ -419,7 +419,7 @@ sub attach {
 
     my $reply = $self->connection->mech->response;
     $self->connection->_warn_on_error( $reply->base->as_string ) and return;
-    delete $self->{history}; # ICK. I really want a Moose "reset to default"
+    delete $self->{history}; # ICK. I really want a Any::Moose "reset to default"
 
     return $self->attachments->[-1];
 }
@@ -551,7 +551,7 @@ This package is licensed under the same terms as Perl 5.8.8.
 =cut
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
+no Any::Moose;
 
 1;
 

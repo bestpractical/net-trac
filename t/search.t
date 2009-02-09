@@ -37,21 +37,21 @@ is($ticket->status, 'closed', "Set status");
 
 # Ticket 2
 can_ok($ticket => 'create');
-ok($ticket->create(summary => 'Summary #2', description => 'Moose?'));
+ok($ticket->create(summary => 'Summary #2', description => 'Any::Moose?'));
 can_ok($ticket, 'load');
 ok($ticket->load(2));
 like($ticket->state->{'summary'}, qr/Summary #2/);
 like($ticket->summary, qr/Summary #2/, "The summary looks correct");
-like($ticket->description, qr/Moose/, "The description looks correct");
+like($ticket->description, qr/Any::Moose/, "The description looks correct");
 
 # Ticket 3
 can_ok($ticket => 'create');
-ok($ticket->create(summary => 'Summary moose #3', description => 'Moose!'));
+ok($ticket->create(summary => 'Summary moose #3', description => 'Any::Moose!'));
 can_ok($ticket, 'load');
 ok($ticket->load(3));
 like($ticket->state->{'summary'}, qr/Summary moose #3/);
 like($ticket->summary, qr/Summary moose #3/, "The summary looks correct");
-like($ticket->description, qr/Moose/, "The description looks correct");
+like($ticket->description, qr/Any::Moose/, "The description looks correct");
 ok($ticket->update( status => 'reopened' ), "Status = reopened");
 is($ticket->status, 'reopened', "Set status");
 

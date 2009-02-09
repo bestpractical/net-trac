@@ -6,9 +6,7 @@ name     'Net-Trac';
 all_from 'lib/Net/Trac.pm';
 license  'perl';
 
-requires 'Moose';
-requires 'MooseX::ClassAttribute';
-requires 'Moose::Util::TypeConstraints';
+requires 'Any::Moose';
 requires 'URI';
 requires 'IO::Scalar';
 requires 'XML::Feed';

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package Net::Trac;
-use Moose;
+use Any::Moose;
 
 our $VERSION = '0.05';
 

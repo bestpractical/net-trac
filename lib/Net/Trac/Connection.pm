@@ -24,7 +24,7 @@ required by all other classes which need to talk to Trac.
 
 =cut
 
-use Moose;
+use Any::Moose;
 
 use XML::Feed;
 use URI;
@@ -258,6 +258,6 @@ This package is licensed under the same terms as Perl 5.8.8.
 =cut
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
+no Any::Moose;
 
 1;

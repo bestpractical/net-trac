@@ -3,7 +3,7 @@ use warnings;
 
 package Net::Trac::TicketAttachment;
 
-use Moose;
+use Any::Moose;
 use DateTime::Format::ISO8601;
 
 =head1 NAME
@@ -111,6 +111,6 @@ This package is licensed under the same terms as Perl 5.8.8.
 =cut
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
+no Any::Moose;
 
 1;
