@@ -14,12 +14,12 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 bb9dd64914723ce6102e0f1fe14a037f1bcd3dda Changes
-SHA1 aba4d512691299ee8722c1959db710467948aa40 MANIFEST
+SHA1 1a5fa905a50260f1389d6f7a44c8576662108c6a Changes
+SHA1 15716411a1242ef52ea1c92fa71483ea7a0e4751 MANIFEST
 SHA1 0a1312b976f1c61b4f2029d2fd9e348f50b9de8c MANIFEST.SKIP
-SHA1 e1cd39b512999b9a7559bb45e001166a72e5d005 META.yml
-SHA1 aec21ccac05659184203041a5828a2c1760a173e Makefile
-SHA1 158742119fdf2e723d48e0c30af00c6054d3b22b Makefile.PL
+SHA1 c5a92ee6051d797797df538cf0cd453fd3afad1b META.yml
+SHA1 c5d0ebe66b1085ca740b713e2532ba8d82cf8845 Makefile
+SHA1 bc6f5fd3266536ae271fd0e2dcc06fb6d183aaf7 Makefile.PL
 SHA1 603bb9de29fb8cba7f13409c546750972eff645d inc/Module/AutoInstall.pm
 SHA1 5c9e093b0facca46d50e3c69d5569aa7a98db0b8 inc/Module/Install.pm
 SHA1 866c0e03f2c87659bb47cb5d0aa37e978b0f2ab3 inc/Module/Install/AutoInstall.pm
@@ -31,15 +31,15 @@ SHA1 37ed4ccd7aba10119e6f2993b8082674ce2e5961 inc/Module/Install/Makefile.pm
 SHA1 4aa1c578faad51f31e62bed7b28d3d42b88219c3 inc/Module/Install/Metadata.pm
 SHA1 d7529d795a1304c88253b26a9089913edf31ae5e inc/Module/Install/Win32.pm
 SHA1 2a74aba5a78e7ab2776382e42106ebe941c2ac28 inc/Module/Install/WriteAll.pm
-SHA1 240800e1ce0dc97baff1544947a900d2cfa09137 lib/Net/Trac.pm
-SHA1 12309338e386c9357383bcbaf1b8c2dbd313b675 lib/Net/Trac/Connection.pm
-SHA1 9e6a87ddde79fa5efcdc715e27184590b72c993e lib/Net/Trac/Mechanize.pm
-SHA1 389cfbe9ad55245fb92c6d5de48f8c0c8720e8a0 lib/Net/Trac/Ticket.pm
-SHA1 69158d76fbd1a429eab591fa596dbc4a9fb5109d lib/Net/Trac/TicketAttachment.pm
-SHA1 5b5be847872e4f7b595461c8c034c7faaec18eaa lib/Net/Trac/TicketHistory.pm
-SHA1 31241533c4ab3b6b79f6e88f9eba8446fef32dd6 lib/Net/Trac/TicketHistoryEntry.pm
-SHA1 66d7b743f899cc343f999b297e8e34954de0d6f1 lib/Net/Trac/TicketPropChange.pm
-SHA1 06355c0c56362273513be5704aa7aa1c395e695b lib/Net/Trac/TicketSearch.pm
+SHA1 0b003afef7794de48db9ef4700c22588ff9a6bd4 lib/Net/Trac.pm
+SHA1 f143fd15ccd1b8f3c120c022f00c5655dcce6638 lib/Net/Trac/Connection.pm
+SHA1 3479b0fb66d47b894bdbfa49f6e172da5a7bb835 lib/Net/Trac/Mechanize.pm
+SHA1 4b54add2e168e24bad85e03d86ff09851cb5ca73 lib/Net/Trac/Ticket.pm
+SHA1 4f05b0aea99480d478d7da402edfa4c9ac4fc868 lib/Net/Trac/TicketAttachment.pm
+SHA1 bbe93eeeab1c4aa767e0e0202e07304d1062af04 lib/Net/Trac/TicketHistory.pm
+SHA1 feb98bc456d170353e1f2cba30d6b21dd51b4f95 lib/Net/Trac/TicketHistoryEntry.pm
+SHA1 fb89bcd175e10073bbc6d59fe6411e6801e69876 lib/Net/Trac/TicketPropChange.pm
+SHA1 b5f2d802bec9b5832983f689214d7747920dc1f5 lib/Net/Trac/TicketSearch.pm
 SHA1 4124638ff631162a468c9f45d10c9c343e607e7f t/01-dependencies.t
 SHA1 5bac82567587a272cc5e6e20c534e95e7d914247 t/02-create.t
 SHA1 d6c0b56fa755d6abf6931cd284b905f65d57be5f t/50-full-api.t
@@ -47,14 +47,15 @@ SHA1 43f06b5200a7e849573909a01fd114d972822237 t/99-pod-coverage.t
 SHA1 bb0da54f2b3f2d7955baa41ee458cb3d1887f475 t/99-pod.t
 SHA1 c6e884059676679fc1de6cf7672274cc49609481 t/attachments.t
 SHA1 86189af2286e7c9e51270738ad1661c228a155c6 t/comments.t
-SHA1 1dbe75a77582c35c64b090a7bfe818f90cf14e32 t/parse_props.t
-SHA1 a992e66a4c7cc392cdca2b48b8bf1a18c935c946 t/search.t
+SHA1 e4f0fdf64c82c7b9d314aa70b1d2a14b5fee3818 t/keywords.t
+SHA1 4b8b427eb4a55d5e645a6f10e6ab20401a65432c t/parse_props.t
+SHA1 5964c17d3028a7286be113de760b287763bd93ec t/search.t
 SHA1 d1d1fd1ceb2d7596f2e18ba78c5aba93022033fd t/setup_trac.pl
 SHA1 af115c5e1941195fdd7fb36cf22bd7cfe2b1f7a8 t/update.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (Darwin)
 
-iEYEARECAAYFAkl4qQoACgkQEi9d9xCOQEZXiwCgwe8tJ4HhFbuH1GMZuiC5ZtNb
-GKsAoMvk5Xd+tZAA6j/+fQjpBuUFRrkN
-=ckOL
+iEYEARECAAYFAkmQegEACgkQEi9d9xCOQEaUFwCeM7BpEj17bbPOETZpL06M5MuG
+l3YAn0deBWJHpHw7H5n7zaz74ozlJyY2
+=KOhW
 -----END PGP SIGNATURE-----
