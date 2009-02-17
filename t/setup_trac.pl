@@ -110,12 +110,15 @@ sub kill_trac {
                my $self = shift;
                my $dir = $self->dir;
                my $port = $self->port;
+               my $old_dir = `pwd`;
+                chomp $old_dir;
                chdir $dir."/trac";
                open STDIN, '/dev/null' or die "Can't read /dev/null: $!";
                  open STDOUT, '>/dev/null' or die "Can't write to /dev/null: $!";
                defined(my $pid = fork) or die "Can't fork: $!";
                if ( $pid ) {
                    $self->pid($pid);
+                    chdir($old_dir);
                 return $pid;
                } else {
                    open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
