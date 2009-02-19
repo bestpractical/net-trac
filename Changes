@@ -1,3 +1,8 @@
+0.07 Thu Feb 19 18:48:21 EST 2009
+
+ * Removed unnecessary use of heavy CPAN modules
+
+
 0.06 Mon Feb  9 13:44:37 EST 2009
 
 BUGFIX
