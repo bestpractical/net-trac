@@ -206,7 +206,7 @@ what field should be used as the key field when creating a hashref.
 
 sub _csv_to_struct {
     my $self = shift;
-    my %args = validate( @_, { data => 1, key => 1, type => { default => 'hash' } } );
+    my %args = validate( @_, { data => 1, key => 1, type => 1 } );
     my $csv  = Text::CSV_XS->new( { binary => 1 } );
     my $x    = $args{'data'};
     my $io   = IO::Scalar->new($x);
@@ -214,13 +214,8 @@ sub _csv_to_struct {
     return unless defined $cols[0];
     $csv->column_names(@cols);
     my $data;
-
-    if ( lc $args{'type'} eq 'hash' ) {
-        while ( my $row = $csv->getline_hr($io) ) {
-            $data->{ $row->{ $args{'key'} } } = $row;
-        }
-    }
-    elsif ( lc $args{'type'} eq 'array' ) {
+    
+    if ( lc $args{'type'} eq 'array' ) {
         while ( my $row = $csv->getline_hr($io) ) {
             push @$data, $row;
         }
