@@ -1,7 +1,7 @@
 use Test::More;
 
 unless (`which trac-admin`) { plan skip_all => 'You need trac installed to run the tests'; }
-plan tests => 24;
+plan tests => 26;
 
 
 use_ok('Net::Trac::Connection');
@@ -38,14 +38,16 @@ like($ticket->summary, qr/pony/, "The summary looks like a pony");
 like($ticket->summary, qr/moose/, "The summary looks like a moose");
 
 ok( $ticket->update( 
-                        summary => 'The product does not contain a pony'
-            
+                        summary => 'The product does not contain a pony',
+                        description => "This\nis\nmultiline" 
             
             ), "updated!");
 
 like($ticket->summary, qr/pony/, "The summary looks like a pony");
 unlike($ticket->summary, qr/moose/, "The summary does not look like a moose");
 
+like($ticket->description, qr/This/);
+like($ticket->description, qr/multiline/);
 my $history = $ticket->history;
 ok($history, "The ticket has some history");
 isa_ok($history, 'Net::Trac::TicketHistory');

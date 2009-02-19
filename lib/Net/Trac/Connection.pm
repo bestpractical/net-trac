@@ -27,8 +27,6 @@ required by all other classes which need to talk to Trac.
 use Any::Moose;
 
 use URI;
-use Text::CSV_XS;
-use IO::Scalar;
 use Params::Validate;
 use Net::Trac::Mechanize;
 
@@ -195,7 +193,7 @@ sub _warn_on_error {
     else        { return }
 }
 
-=head2 _csv_to_struct PARAMHASH
+=head2 _tsv_to_struct PARAMHASH
 
 Takes a paramhash of the keys C<data> and C<key> and optionally C<type>.
 Given CSV data this method will return a reference to a hash (by default)
@@ -204,23 +202,27 @@ what field should be used as the key field when creating a hashref.
 
 =cut
 
-sub _csv_to_struct {
+sub _tsv_to_struct {
     my $self = shift;
     my %args = validate( @_, { data => 1, key => 1, type => 1 } );
-    my $csv  = Text::CSV_XS->new( { binary => 1 } );
-    my $x    = $args{'data'};
-    my $io   = IO::Scalar->new($x);
-    my @cols = @{ $csv->getline($io) || [] };
-    return unless defined $cols[0];
-    $csv->column_names(@cols);
-    my $data;
+    my $x    = ${$args{'data'}};
+
+    my $data = [];
+    my @lines = split(/\r\n/,$x);
     
-    if ( lc $args{'type'} eq 'array' ) {
-        while ( my $row = $csv->getline_hr($io) ) {
-            push @$data, $row;
-        }
+
+    my @keys = split(/\t/, shift @lines);
+
+    for my $line (@lines) {
+        my %hash;
+        my @values = split(/\t/,$line);
+        
+       $hash{$_} = shift @values for (@keys); 
+       push @$data, \%hash;
     }
+
     return $data;
+
 }
 
 =head1 LICENSE

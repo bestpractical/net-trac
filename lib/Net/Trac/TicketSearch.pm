@@ -85,7 +85,7 @@ sub query {
     $self->results([]);
 
     # Build a URL from the fields we want and the query
-    my $base = '/query?format=csv&order=id&max=' . $self->limit;
+    my $base = '/query?format=tab&order=id&max=' . $self->limit;
     $base .= '&' . join '&', map { "col=$_" } Net::Trac::Ticket->valid_props;
 
     $self->url( $self->_build_query( $base, \%query ) );
@@ -93,7 +93,7 @@ sub query {
     my $content = $self->connection->_fetch( $self->url )
         or return;
 
-    my $data = $self->connection->_csv_to_struct( data => \$content, key => 'id', type => 'array' );
+    my $data = $self->connection->_tsv_to_struct( data => \$content, key => 'id', type => 'array' );
 
     unless ( $no_objects ) {
         my @tickets = ();
