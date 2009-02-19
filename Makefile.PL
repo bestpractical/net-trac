@@ -8,8 +8,6 @@ license  'perl';
 
 requires 'Any::Moose';
 requires 'URI';
-requires 'IO::Scalar';
-requires 'Text::CSV_XS';
 requires 'LWP::Simple';
 requires 'Params::Validate';
 requires 'WWW::Mechanize' => '1.52';
