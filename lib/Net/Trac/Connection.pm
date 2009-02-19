@@ -26,7 +26,6 @@ required by all other classes which need to talk to Trac.
 
 use Any::Moose;
 
-use XML::Feed;
 use URI;
 use Text::CSV_XS;
 use IO::Scalar;
@@ -194,26 +193,6 @@ sub _warn_on_error {
     # Returns TRUE if it got an error, for nicer conditionals when calling
     if ( $die ) { warn "Request errored out.\n"; return 1; }
     else        { return }
-}
-
-=head2 _fetch_feed URL
-
-Fetches and parses a relative feed URL from the Trac server.  Warns if an error
-occurs and returns undef.  Otherwise returns an L<XML::Feed> object.
-
-=cut
-
-sub _fetch_feed {
-    my $self  = shift;
-    my $query = shift;
-    my $feed  = XML::Feed->parse( URI->new( $self->url . $query ) );
-
-    if ( not $feed ) {
-        warn XML::Feed->errstr;
-        return;
-    }
-
-    return $feed;
 }
 
 =head2 _csv_to_struct PARAMHASH

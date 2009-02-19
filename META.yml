@@ -3,7 +3,7 @@ abstract: 'Interact with a remote Trac instance'
 author:
   - 'Jesse Vincent <jesse@bestpractical.com>, Thomas Sibley <trs@bestpractical.com>'
 distribution_type: module
-generated_by: 'Module::Install version 0.77'
+generated_by: 'Module::Install version 0.79'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -15,7 +15,9 @@ no_index:
     - t
 requires:
   Any::Moose: 0
+  DateTime: 0
   DateTime::Format::ISO8601: 0
+  HTTP::Date: 0
   IO::Scalar: 0
   LWP::Simple: 0
   Lingua::EN::Inflect: 0
@@ -24,7 +26,6 @@ requires:
   URI: 0
   URI::Escape: 0
   WWW::Mechanize: 1.52
-  XML::Feed: 0
 resources:
   license: http://dev.perl.org/licenses/
 version: 0.06

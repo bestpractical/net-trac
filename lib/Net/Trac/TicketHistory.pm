@@ -66,12 +66,19 @@ sub load {
     # keywords
     my $temp_state = { %{ $ticket_obj->state()}};
 
-    my $feed = $self->connection->_fetch_feed( "/ticket/@{[$ticket_obj->id]}?format=rss" )
+    my $feed_content = $self->connection->_fetch( "/ticket/@{[$ticket_obj->id]}?format=rss" )
         or return;
+
+    my $entries = '';
+    if ($feed_content =~ m|^(?:.*?)<item>(.*)</item>(?:.*?)$|is) {
+        $entries = $1;
+    }
+
+    my @entries = split(m|</item>\s*<item>|, $entries);
 
     my @history;
     # Work on the newest entry first so we can back-calculate from the current state
-    foreach my $entry (reverse $feed->entries ) {
+    foreach my $entry (reverse @entries) {
         my $e = Net::Trac::TicketHistoryEntry->new({ connection => $self->connection });
         $e->parse_feed_entry($entry, $temp_state);
         # newest entry should be at the front of the list in the history later
