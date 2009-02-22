@@ -1,3 +1,7 @@
+0.09 Sat Feb 21 21:22:42 EST 2009
+
+ * Loosen our DateTime regex
+
 0.08 Sat Feb 21 20:18:30 EST 2009
  
  * Start using Text::CSV to parse Trac TSV format

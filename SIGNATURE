@@ -14,11 +14,11 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 9a311024c5d6979dc7adf9631f4ede67c4e0c175 Changes
+SHA1 5096ed04df8502ed713ad2e7b05e8bcf2ef74351 Changes
 SHA1 15716411a1242ef52ea1c92fa71483ea7a0e4751 MANIFEST
 SHA1 0a1312b976f1c61b4f2029d2fd9e348f50b9de8c MANIFEST.SKIP
-SHA1 1eeb746f5e160942ce934d579fb078440a07f200 META.yml
-SHA1 4fb362428127aacb1e82606a8671460c253f057a Makefile
+SHA1 d6724e09d0ff26be2bbd070e2cabb3abdfa7ceea META.yml
+SHA1 9dae96223f28ecdaf95f446437e1dbb3df21282b Makefile
 SHA1 7bc9a9055ba26fa8ade2837e9f67b528bb50f38f Makefile.PL
 SHA1 603bb9de29fb8cba7f13409c546750972eff645d inc/Module/AutoInstall.pm
 SHA1 ae018c4565c1277089ca8f1b28f888d95430cb7f inc/Module/Install.pm
@@ -31,10 +31,10 @@ SHA1 9f6beaa2f4749ceb5dd0c9b0c647d0f3289c7b46 inc/Module/Install/Makefile.pm
 SHA1 bd988ba3fb7eee0ad889eadc2f5338a8d98fc2a3 inc/Module/Install/Metadata.pm
 SHA1 e9aa83f3e8b16ccfce544a90a57b63b70a497759 inc/Module/Install/Win32.pm
 SHA1 ade2ac0b0246d4d8e28fa46942e53f6925abda46 inc/Module/Install/WriteAll.pm
-SHA1 1a3907484e056ee94d4d43ea25b9e53d27ca6ad8 lib/Net/Trac.pm
+SHA1 4a4614c00021ddb350b79ec81a8404b480e1fab1 lib/Net/Trac.pm
 SHA1 ad4c40bb6d0a81d7bbd8023520231d5a18ca0897 lib/Net/Trac/Connection.pm
 SHA1 3479b0fb66d47b894bdbfa49f6e172da5a7bb835 lib/Net/Trac/Mechanize.pm
-SHA1 a26280118c755f7ecfa9bf7a35436bc6c965bb82 lib/Net/Trac/Ticket.pm
+SHA1 df5af97e27f146eb347e90b70076a37080a114e4 lib/Net/Trac/Ticket.pm
 SHA1 3b85b0cb1eb8fcdb6dbc65f7109b4f4c9202a4ee lib/Net/Trac/TicketAttachment.pm
 SHA1 2d118ea2f112122d9482ad90018c4862921b5f6c lib/Net/Trac/TicketHistory.pm
 SHA1 d6ad16bf5803bfc29571f57c1c2a9f22682acd56 lib/Net/Trac/TicketHistoryEntry.pm
@@ -55,7 +55,7 @@ SHA1 af115c5e1941195fdd7fb36cf22bd7cfe2b1f7a8 t/update.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (Darwin)
 
-iEYEARECAAYFAkmgqDIACgkQEi9d9xCOQEbUtACfdFOTtOJiCI55+Ol3hXtMxmIc
-HBoAoKSA1dVcswX6g7MBxWa6NpQIcs+B
-=/8np
+iEYEARECAAYFAkmgt8UACgkQEi9d9xCOQEZTdACZAdcFy13VdqKGl8jIpXQYRZ8Z
+2GoAn3NMoJkgTVCesTUyf62RJ4/TUfsA
+=IE4J
 -----END PGP SIGNATURE-----
