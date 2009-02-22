@@ -1,10 +1,7 @@
-use strict;
-use warnings;
-
 package Net::Trac;
 use Any::Moose;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use Net::Trac::Connection;
 use Net::Trac::Ticket;

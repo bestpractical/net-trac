@@ -14,35 +14,35 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 1a5fa905a50260f1389d6f7a44c8576662108c6a Changes
+SHA1 9a311024c5d6979dc7adf9631f4ede67c4e0c175 Changes
 SHA1 15716411a1242ef52ea1c92fa71483ea7a0e4751 MANIFEST
 SHA1 0a1312b976f1c61b4f2029d2fd9e348f50b9de8c MANIFEST.SKIP
-SHA1 c5a92ee6051d797797df538cf0cd453fd3afad1b META.yml
-SHA1 c5d0ebe66b1085ca740b713e2532ba8d82cf8845 Makefile
-SHA1 bc6f5fd3266536ae271fd0e2dcc06fb6d183aaf7 Makefile.PL
+SHA1 1eeb746f5e160942ce934d579fb078440a07f200 META.yml
+SHA1 4fb362428127aacb1e82606a8671460c253f057a Makefile
+SHA1 7bc9a9055ba26fa8ade2837e9f67b528bb50f38f Makefile.PL
 SHA1 603bb9de29fb8cba7f13409c546750972eff645d inc/Module/AutoInstall.pm
-SHA1 5c9e093b0facca46d50e3c69d5569aa7a98db0b8 inc/Module/Install.pm
-SHA1 866c0e03f2c87659bb47cb5d0aa37e978b0f2ab3 inc/Module/Install/AutoInstall.pm
-SHA1 465acb50b9006ce61f58a7bd02d0bb029ddceaa6 inc/Module/Install/Base.pm
-SHA1 8356d82167fc00550b4a3ceea8bd852a374d7509 inc/Module/Install/Can.pm
-SHA1 b47ce07fa6d6e38e3daa6cfc752b23f59a64754c inc/Module/Install/Fetch.pm
-SHA1 3863d11bd88e40811755e20e680795ad2be974c8 inc/Module/Install/Include.pm
-SHA1 37ed4ccd7aba10119e6f2993b8082674ce2e5961 inc/Module/Install/Makefile.pm
-SHA1 4aa1c578faad51f31e62bed7b28d3d42b88219c3 inc/Module/Install/Metadata.pm
-SHA1 d7529d795a1304c88253b26a9089913edf31ae5e inc/Module/Install/Win32.pm
-SHA1 2a74aba5a78e7ab2776382e42106ebe941c2ac28 inc/Module/Install/WriteAll.pm
-SHA1 0b003afef7794de48db9ef4700c22588ff9a6bd4 lib/Net/Trac.pm
-SHA1 f143fd15ccd1b8f3c120c022f00c5655dcce6638 lib/Net/Trac/Connection.pm
+SHA1 ae018c4565c1277089ca8f1b28f888d95430cb7f inc/Module/Install.pm
+SHA1 0a6f29536bedea3bb94744a7d43ffe39da7e4819 inc/Module/Install/AutoInstall.pm
+SHA1 4552acdfca8b78f8015d8449e1325616259095f5 inc/Module/Install/Base.pm
+SHA1 7fb663fff161fb45882b52edd62857bf15359658 inc/Module/Install/Can.pm
+SHA1 8b1d3db746faa6faf2d967a48d3812ec1f44b4c6 inc/Module/Install/Fetch.pm
+SHA1 d7ce736cdd05d5156d379ef39cca93beeeeba828 inc/Module/Install/Include.pm
+SHA1 9f6beaa2f4749ceb5dd0c9b0c647d0f3289c7b46 inc/Module/Install/Makefile.pm
+SHA1 bd988ba3fb7eee0ad889eadc2f5338a8d98fc2a3 inc/Module/Install/Metadata.pm
+SHA1 e9aa83f3e8b16ccfce544a90a57b63b70a497759 inc/Module/Install/Win32.pm
+SHA1 ade2ac0b0246d4d8e28fa46942e53f6925abda46 inc/Module/Install/WriteAll.pm
+SHA1 1a3907484e056ee94d4d43ea25b9e53d27ca6ad8 lib/Net/Trac.pm
+SHA1 ad4c40bb6d0a81d7bbd8023520231d5a18ca0897 lib/Net/Trac/Connection.pm
 SHA1 3479b0fb66d47b894bdbfa49f6e172da5a7bb835 lib/Net/Trac/Mechanize.pm
-SHA1 4b54add2e168e24bad85e03d86ff09851cb5ca73 lib/Net/Trac/Ticket.pm
-SHA1 4f05b0aea99480d478d7da402edfa4c9ac4fc868 lib/Net/Trac/TicketAttachment.pm
-SHA1 bbe93eeeab1c4aa767e0e0202e07304d1062af04 lib/Net/Trac/TicketHistory.pm
-SHA1 feb98bc456d170353e1f2cba30d6b21dd51b4f95 lib/Net/Trac/TicketHistoryEntry.pm
+SHA1 a26280118c755f7ecfa9bf7a35436bc6c965bb82 lib/Net/Trac/Ticket.pm
+SHA1 3b85b0cb1eb8fcdb6dbc65f7109b4f4c9202a4ee lib/Net/Trac/TicketAttachment.pm
+SHA1 2d118ea2f112122d9482ad90018c4862921b5f6c lib/Net/Trac/TicketHistory.pm
+SHA1 d6ad16bf5803bfc29571f57c1c2a9f22682acd56 lib/Net/Trac/TicketHistoryEntry.pm
 SHA1 fb89bcd175e10073bbc6d59fe6411e6801e69876 lib/Net/Trac/TicketPropChange.pm
-SHA1 b5f2d802bec9b5832983f689214d7747920dc1f5 lib/Net/Trac/TicketSearch.pm
+SHA1 c48b630f582b7449402ff3412f7ba3cdc98546d3 lib/Net/Trac/TicketSearch.pm
 SHA1 4124638ff631162a468c9f45d10c9c343e607e7f t/01-dependencies.t
 SHA1 5bac82567587a272cc5e6e20c534e95e7d914247 t/02-create.t
-SHA1 d6c0b56fa755d6abf6931cd284b905f65d57be5f t/50-full-api.t
+SHA1 a4aca02b448d74caa2aa8a3265b7ce00f1458162 t/50-full-api.t
 SHA1 43f06b5200a7e849573909a01fd114d972822237 t/99-pod-coverage.t
 SHA1 bb0da54f2b3f2d7955baa41ee458cb3d1887f475 t/99-pod.t
 SHA1 c6e884059676679fc1de6cf7672274cc49609481 t/attachments.t
@@ -50,12 +50,12 @@ SHA1 86189af2286e7c9e51270738ad1661c228a155c6 t/comments.t
 SHA1 e4f0fdf64c82c7b9d314aa70b1d2a14b5fee3818 t/keywords.t
 SHA1 4b8b427eb4a55d5e645a6f10e6ab20401a65432c t/parse_props.t
 SHA1 5964c17d3028a7286be113de760b287763bd93ec t/search.t
-SHA1 d1d1fd1ceb2d7596f2e18ba78c5aba93022033fd t/setup_trac.pl
+SHA1 cedac812c28f3349a68e2744a96c341b1de22828 t/setup_trac.pl
 SHA1 af115c5e1941195fdd7fb36cf22bd7cfe2b1f7a8 t/update.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (Darwin)
 
-iEYEARECAAYFAkmQegEACgkQEi9d9xCOQEaUFwCeM7BpEj17bbPOETZpL06M5MuG
-l3YAn0deBWJHpHw7H5n7zaz74ozlJyY2
-=KOhW
+iEYEARECAAYFAkmgqDIACgkQEi9d9xCOQEbUtACfdFOTtOJiCI55+Ol3hXtMxmIc
+HBoAoKSA1dVcswX6g7MBxWa6NpQIcs+B
+=/8np
 -----END PGP SIGNATURE-----
