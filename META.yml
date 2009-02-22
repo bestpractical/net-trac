@@ -16,11 +16,11 @@ no_index:
 requires:
   Any::Moose: 0
   DateTime: 0
-  DateTime::Format::ISO8601: 0
   HTTP::Date: 0
   LWP::Simple: 0
   Lingua::EN::Inflect: 0
   Params::Validate: 0
+  Text::CSV: 0
   URI: 0
   URI::Escape: 0
   WWW::Mechanize: 1.52

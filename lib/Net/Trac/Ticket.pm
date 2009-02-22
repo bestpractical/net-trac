@@ -25,7 +25,7 @@ comments and getting attachments.
 use Any::Moose;
 use Params::Validate qw(:all);
 use Lingua::EN::Inflect qw();
-use DateTime::Format::ISO8601;
+use DateTime;
 
 use Net::Trac::TicketSearch;
 use Net::Trac::TicketHistory;
@@ -86,14 +86,31 @@ for my $prop ( __PACKAGE__->valid_props ) {
     *{ "Net::Trac::Ticket::" . $prop } = sub { shift->state->{$prop} };
 }
 
-sub created       { shift->_time_to_datetime('time') }
-sub last_modified { shift->_time_to_datetime('changetime') }
+sub created       { my $self= shift; $self->timestamp_to_datetime($self->time) }
+sub last_modified { my $self= shift; $self->timestamp_to_datetime($self->changetime) }
 
-sub _time_to_datetime {
-    my ($self, $prop) = @_;
-    my $time = $self->$prop;
-    $time =~ s/ /T/;
-    return DateTime::Format::ISO8601->parse_datetime( $time );
+=head2 timestamp_to_datetime $stamp
+
+Accept's a timestamp in Trac's somewhat idiosyncratic format and returns a DateTime object
+
+=cut
+
+sub timestamp_to_datetime {
+    my ( $self, $prop ) = @_;
+    if ( $prop =~ /^(\d{4})-(\d\d)-(\d\d)T?(\d\d):(\d\d):(\d\d)(?:Z?([+-][\d:]+))?/ ) {
+        my ( $year, $month, $day, $hour, $min, $sec, $offset) = 
+                ( $1, $2, $3, $4, $5, $6, $7 );
+
+        $offset =~ s/://;
+        return DateTime->new(
+            year   => $year,
+            month  => $month,
+            day    => $day,
+            hour   => $hour,
+            minute => $min,
+            second => $sec,
+            time_zone => $offset);
+    }
 }
 
 sub BUILD {
@@ -160,7 +177,6 @@ sub load_from_hashref {
     return undef unless $hash and $hash->{'id'};
 
     $self->state( $hash );
-    $self->_fetch_update_ticket_metadata unless $skip_metadata;
     return $hash->{'id'};
 }
 
@@ -194,7 +210,9 @@ sub _fetch_new_ticket_metadata {
     return 1 if $LOADED_NEW_METADATA;
 
     my ($form, $form_num) = $self->_get_new_ticket_form;
-    return undef unless $form;
+    unless ( $form ) {
+        return undef;
+    }
 
     $self->valid_milestones([ $form->find_input("field_milestone")->possible_values ]);
     $self->valid_types     ([ $form->find_input("field_type")->possible_values ]);
@@ -211,10 +229,10 @@ sub _fetch_update_ticket_metadata {
     my $self = shift;
 
     return 1 if $LOADED_UPDATE_METADATA;
-
     my ($form, $form_num) = $self->_get_update_ticket_form;
-    return undef unless $form;
-
+    unless ($form) {
+        return undef;
+    }
     my $resolutions = $form->find_input("action_resolve_resolve_resolution");
     $self->valid_resolutions( [$resolutions->possible_values] ) if $resolutions;
     

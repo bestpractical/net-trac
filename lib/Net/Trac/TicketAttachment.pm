@@ -4,7 +4,6 @@ use warnings;
 package Net::Trac::TicketAttachment;
 
 use Any::Moose;
-use DateTime::Format::ISO8601;
 
 =head1 NAME
 
@@ -88,10 +87,8 @@ sub _parse_html_chunk {
     $self->author($1) if $html =~ qr{added by <em>(.+?)</em>};
     if ( $html =~ qr{<a (?:.+?) title="(.+?) in Timeline">} ) {
         my $scalar_date = $1;
-        $scalar_date =~ s/Z//;
-        $scalar_date =~ s/([+-]\d\d)(\d\d)$/$1:$2/;
-        $self->date( DateTime::Format::ISO8601->parse_datetime($scalar_date) );
-    }
+       $self->date( Net::Trac::Ticket->timestamp_to_datetime($scalar_date));
+    }       
     $self->description($1) if $html =~ qr{<dd>\s*(\S.*?)\s*</dd>\s*$};
 
     return 1;
