@@ -93,7 +93,7 @@ sub query {
     my $content = $self->connection->_fetch( $self->url )
         or return;
 
-    my $data = $self->connection->_tsv_to_struct( data => \$content, key => 'id', type => 'array' );
+    my $data = $self->connection->_tsv_to_struct( data => \$content);
 
     unless ( $no_objects ) {
         my @tickets = ();
