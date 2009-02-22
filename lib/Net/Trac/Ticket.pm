@@ -97,7 +97,7 @@ Accept's a timestamp in Trac's somewhat idiosyncratic format and returns a DateT
 
 sub timestamp_to_datetime {
     my ( $self, $prop ) = @_;
-    if ( $prop =~ /^(\d{4})-(\d\d)-(\d\d)T?(\d\d):(\d\d):(\d\d)(?:Z?([+-][\d:]+))?/ ) {
+    if ( $prop =~ /^(\d{4})-(\d\d)-(\d\d)[\sT](\d\d):(\d\d):(\d\d)(?:Z?([+-][\d:]+))?/i ) {
         my ( $year, $month, $day, $hour, $min, $sec, $offset) = 
                 ( $1, $2, $3, $4, $5, $6, $7 );
 
