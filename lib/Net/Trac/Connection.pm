@@ -1,6 +1,3 @@
-use strict;
-use warnings;
-
 package Net::Trac::Connection;
 
 =head1 NAME
@@ -28,6 +25,7 @@ use Any::Moose;
 
 use URI;
 use Params::Validate;
+use Text::CSV;
 use Net::Trac::Mechanize;
 
 =head1 ACCESSORS
@@ -195,34 +193,25 @@ sub _warn_on_error {
 
 =head2 _tsv_to_struct PARAMHASH
 
-Takes a paramhash of the keys C<data> and C<key> and optionally C<type>.
-Given CSV data this method will return a reference to a hash (by default)
-or array (depending on the value of the C<type> key).  C<key> specifies
-what field should be used as the key field when creating a hashref.
+Takes a paramhash of the keys C<data>
+Given TSV data this method will return a reference to an array.
 
 =cut
 
 sub _tsv_to_struct {
     my $self = shift;
-    my %args = validate( @_, { data => 1, key => 1, type => 1 } );
-    my $x    = ${$args{'data'}};
+    my %args = validate( @_, { data => 1 } );
+    my $lines    = ${ $args{'data'} };
 
-    my $data = [];
-    my @lines = split(/\r\n/,$x);
-    
-
-    my @keys = split(/\t/, shift @lines);
-
-    for my $line (@lines) {
-        my %hash;
-        my @values = split(/\t/,$line);
-        
-       $hash{$_} = shift @values for (@keys); 
-       push @$data, \%hash;
+    open (my $io, "<",\$lines) || die "Couldn't open in-memory file to data: $!";
+    my $csv = Text::CSV->new({binary => 1, sep_char => "\t" });
+         $csv->column_names ($csv->getline ($io));
+    my @results;
+    while (my $hr = $csv->getline_hr ($io)) {
+        push @results, $hr;
     }
-
-    return $data;
-
+    close($io)||die $!;
+    return \@results;
 }
 
 =head1 LICENSE
