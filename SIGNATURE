@@ -14,11 +14,11 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 5096ed04df8502ed713ad2e7b05e8bcf2ef74351 Changes
+SHA1 7b412360ac974f036c88c6ff3028ffe7be96fb9a Changes
 SHA1 15716411a1242ef52ea1c92fa71483ea7a0e4751 MANIFEST
 SHA1 0a1312b976f1c61b4f2029d2fd9e348f50b9de8c MANIFEST.SKIP
-SHA1 d6724e09d0ff26be2bbd070e2cabb3abdfa7ceea META.yml
-SHA1 9dae96223f28ecdaf95f446437e1dbb3df21282b Makefile
+SHA1 35e965fffd75fc9871fab402d37f386954aeb413 META.yml
+SHA1 fc44d5c1f83de051aee4293630eda2d1fb3fe896 Makefile
 SHA1 7bc9a9055ba26fa8ade2837e9f67b528bb50f38f Makefile.PL
 SHA1 603bb9de29fb8cba7f13409c546750972eff645d inc/Module/AutoInstall.pm
 SHA1 ae018c4565c1277089ca8f1b28f888d95430cb7f inc/Module/Install.pm
@@ -31,7 +31,7 @@ SHA1 9f6beaa2f4749ceb5dd0c9b0c647d0f3289c7b46 inc/Module/Install/Makefile.pm
 SHA1 bd988ba3fb7eee0ad889eadc2f5338a8d98fc2a3 inc/Module/Install/Metadata.pm
 SHA1 e9aa83f3e8b16ccfce544a90a57b63b70a497759 inc/Module/Install/Win32.pm
 SHA1 ade2ac0b0246d4d8e28fa46942e53f6925abda46 inc/Module/Install/WriteAll.pm
-SHA1 4a4614c00021ddb350b79ec81a8404b480e1fab1 lib/Net/Trac.pm
+SHA1 1c2db8781bc41f0ce0ecb7a197ca6855fa487b4e lib/Net/Trac.pm
 SHA1 ad4c40bb6d0a81d7bbd8023520231d5a18ca0897 lib/Net/Trac/Connection.pm
 SHA1 3479b0fb66d47b894bdbfa49f6e172da5a7bb835 lib/Net/Trac/Mechanize.pm
 SHA1 df5af97e27f146eb347e90b70076a37080a114e4 lib/Net/Trac/Ticket.pm
@@ -50,12 +50,12 @@ SHA1 86189af2286e7c9e51270738ad1661c228a155c6 t/comments.t
 SHA1 e4f0fdf64c82c7b9d314aa70b1d2a14b5fee3818 t/keywords.t
 SHA1 4b8b427eb4a55d5e645a6f10e6ab20401a65432c t/parse_props.t
 SHA1 5964c17d3028a7286be113de760b287763bd93ec t/search.t
-SHA1 cedac812c28f3349a68e2744a96c341b1de22828 t/setup_trac.pl
+SHA1 a5626931fbd0a1e875a772754f55043faa2bc8d8 t/setup_trac.pl
 SHA1 af115c5e1941195fdd7fb36cf22bd7cfe2b1f7a8 t/update.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (Darwin)
 
-iEYEARECAAYFAkmgt8UACgkQEi9d9xCOQEZTdACZAdcFy13VdqKGl8jIpXQYRZ8Z
-2GoAn3NMoJkgTVCesTUyf62RJ4/TUfsA
-=IE4J
+iEYEARECAAYFAkmnKVQACgkQEi9d9xCOQEa+kQCglZ1mnHMJng/rI7lni6ub87xA
+fD0AnRQK+o7pLTEdep1XC86VNMsq06Fa
+=Gjjw
 -----END PGP SIGNATURE-----

@@ -1,7 +1,7 @@
 package Net::Trac;
 use Any::Moose;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use Net::Trac::Connection;
 use Net::Trac::Ticket;

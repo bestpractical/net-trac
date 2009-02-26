@@ -1,3 +1,7 @@
+0.10 Thu Feb 26 18:42:47 EST 2009
+
+ * [rt.cpan.org #43642] Server didn't start up on slow box  ANDK++
+
 0.09 Sat Feb 21 21:22:42 EST 2009
 
  * Loosen our DateTime regex
