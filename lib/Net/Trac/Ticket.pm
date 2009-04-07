@@ -113,11 +113,6 @@ sub timestamp_to_datetime {
     }
 }
 
-sub BUILD {
-    my $self = shift;
-    $self->_fetch_new_ticket_metadata unless ($LOADED_NEW_METADATA);
-}
-
 =head1 METHODS
 
 =head2 new HASH

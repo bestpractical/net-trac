@@ -151,7 +151,7 @@ sub _fetch {
     my $abs_url = $self->url . $query;
     $self->mech->get($abs_url);
 
-    if ( $self->_warn_on_error($abs_url) ) { warn "FAIL"; return }
+    if ( $self->_warn_on_error($abs_url) ) { warn "Failed to fetch $abs_url"; return }
     else { return $self->mech->content }
 }
 
