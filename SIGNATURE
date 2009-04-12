@@ -1,0 +1,61 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.55.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 7b412360ac974f036c88c6ff3028ffe7be96fb9a Changes
+SHA1 15716411a1242ef52ea1c92fa71483ea7a0e4751 MANIFEST
+SHA1 0a1312b976f1c61b4f2029d2fd9e348f50b9de8c MANIFEST.SKIP
+SHA1 35e965fffd75fc9871fab402d37f386954aeb413 META.yml
+SHA1 fc44d5c1f83de051aee4293630eda2d1fb3fe896 Makefile
+SHA1 7bc9a9055ba26fa8ade2837e9f67b528bb50f38f Makefile.PL
+SHA1 603bb9de29fb8cba7f13409c546750972eff645d inc/Module/AutoInstall.pm
+SHA1 ae018c4565c1277089ca8f1b28f888d95430cb7f inc/Module/Install.pm
+SHA1 0a6f29536bedea3bb94744a7d43ffe39da7e4819 inc/Module/Install/AutoInstall.pm
+SHA1 4552acdfca8b78f8015d8449e1325616259095f5 inc/Module/Install/Base.pm
+SHA1 7fb663fff161fb45882b52edd62857bf15359658 inc/Module/Install/Can.pm
+SHA1 8b1d3db746faa6faf2d967a48d3812ec1f44b4c6 inc/Module/Install/Fetch.pm
+SHA1 d7ce736cdd05d5156d379ef39cca93beeeeba828 inc/Module/Install/Include.pm
+SHA1 9f6beaa2f4749ceb5dd0c9b0c647d0f3289c7b46 inc/Module/Install/Makefile.pm
+SHA1 bd988ba3fb7eee0ad889eadc2f5338a8d98fc2a3 inc/Module/Install/Metadata.pm
+SHA1 e9aa83f3e8b16ccfce544a90a57b63b70a497759 inc/Module/Install/Win32.pm
+SHA1 ade2ac0b0246d4d8e28fa46942e53f6925abda46 inc/Module/Install/WriteAll.pm
+SHA1 1c2db8781bc41f0ce0ecb7a197ca6855fa487b4e lib/Net/Trac.pm
+SHA1 ad4c40bb6d0a81d7bbd8023520231d5a18ca0897 lib/Net/Trac/Connection.pm
+SHA1 3479b0fb66d47b894bdbfa49f6e172da5a7bb835 lib/Net/Trac/Mechanize.pm
+SHA1 df5af97e27f146eb347e90b70076a37080a114e4 lib/Net/Trac/Ticket.pm
+SHA1 3b85b0cb1eb8fcdb6dbc65f7109b4f4c9202a4ee lib/Net/Trac/TicketAttachment.pm
+SHA1 2d118ea2f112122d9482ad90018c4862921b5f6c lib/Net/Trac/TicketHistory.pm
+SHA1 d6ad16bf5803bfc29571f57c1c2a9f22682acd56 lib/Net/Trac/TicketHistoryEntry.pm
+SHA1 fb89bcd175e10073bbc6d59fe6411e6801e69876 lib/Net/Trac/TicketPropChange.pm
+SHA1 c48b630f582b7449402ff3412f7ba3cdc98546d3 lib/Net/Trac/TicketSearch.pm
+SHA1 4124638ff631162a468c9f45d10c9c343e607e7f t/01-dependencies.t
+SHA1 5bac82567587a272cc5e6e20c534e95e7d914247 t/02-create.t
+SHA1 a4aca02b448d74caa2aa8a3265b7ce00f1458162 t/50-full-api.t
+SHA1 43f06b5200a7e849573909a01fd114d972822237 t/99-pod-coverage.t
+SHA1 bb0da54f2b3f2d7955baa41ee458cb3d1887f475 t/99-pod.t
+SHA1 c6e884059676679fc1de6cf7672274cc49609481 t/attachments.t
+SHA1 86189af2286e7c9e51270738ad1661c228a155c6 t/comments.t
+SHA1 e4f0fdf64c82c7b9d314aa70b1d2a14b5fee3818 t/keywords.t
+SHA1 4b8b427eb4a55d5e645a6f10e6ab20401a65432c t/parse_props.t
+SHA1 5964c17d3028a7286be113de760b287763bd93ec t/search.t
+SHA1 a5626931fbd0a1e875a772754f55043faa2bc8d8 t/setup_trac.pl
+SHA1 af115c5e1941195fdd7fb36cf22bd7cfe2b1f7a8 t/update.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (Darwin)
+
+iEYEARECAAYFAkmnKVQACgkQEi9d9xCOQEa+kQCglZ1mnHMJng/rI7lni6ub87xA
+fD0AnRQK+o7pLTEdep1XC86VNMsq06Fa
+=Gjjw
+-----END PGP SIGNATURE-----

@@ -1,0 +1,21 @@
+
+
+KNOWN ISSUES
+
+    * reverse engineering a proper history of trac's "Description" field is hard. 
+    * Patches welcome
+
+
+Samples of failed parses from the Parrot Trac 
+
+
+trac:http://trac.parrot.org/parrot (trac:trac:http://trac.parrot.org/parrot ): Fetching ticket 172 - 171 of 285
+could not  parse <strong>cc</strong>
+              <em>parrot-dev@â¦</em> removed
+             at /opt/perl-5.8.9/lib/site_perl/5.8.9/Net/Trac/TicketHistoryEntry.pm line 148.
+I found no prop in <strong>cc</strong>
+              <em>parrot-dev@â¦</em> removed
+             at /opt/perl-5.8.9/lib/site_perl/5.8.9/Net/Trac/TicketHistoryEntry.pm line 159.
+
+could not  parse <strong>description</strong>
+              modified (<a href="/parrot/ticket/35?action=diff&amp;version=1">diff</a>)
