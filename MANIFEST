@@ -19,7 +19,6 @@ lib/Net/Trac/TicketHistory.pm
 lib/Net/Trac/TicketHistoryEntry.pm
 lib/Net/Trac/TicketPropChange.pm
 lib/Net/Trac/TicketSearch.pm
-Makefile
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
