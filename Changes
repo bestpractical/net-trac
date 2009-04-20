@@ -1,4 +1,6 @@
-0.11
+0.12 Mon Apr 20 14:20:04 CST 2009
+
+* Better support for running against trac servers you don't have a write access to
 
 0.10 Thu Feb 26 18:42:47 EST 2009
 
