@@ -101,6 +101,7 @@ sub timestamp_to_datetime {
         my ( $year, $month, $day, $hour, $min, $sec, $offset) = 
                 ( $1, $2, $3, $4, $5, $6, $7 );
 
+        $offset ||= '00:00';
         $offset =~ s/://;
         return DateTime->new(
             year   => $year,
