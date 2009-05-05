@@ -1,3 +1,9 @@
+
+
+* Added create transactions to ticket history
+* Added a flag for "this history entry is a create"
+* Add a ticket accessor on ticket history entries
+
 0.12 Mon Apr 20 14:20:04 CST 2009
 
 * Better support for running against trac servers you don't have a write access to
