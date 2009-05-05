@@ -391,8 +391,7 @@ sub comments {
 
     my @comments;
     for ( @{$hist->entries} ) {
-        # the ticket created thing makes me feel dirty
-        push @comments, $_ if $_->content =~ /\S/ && $_->content !~ /^Ticket created$/;
+        push @comments, $_ if ($_->content =~ /\S/ && ! $_->is_create);
     }
     return wantarray ? @comments : \@comments;
 }

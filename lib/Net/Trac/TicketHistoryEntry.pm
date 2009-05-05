@@ -37,6 +37,14 @@ Returns a L<DateTime> object.
 Returns a hashref (property names as the keys) of
 L<Net::Trac::TicketPropChange>s associated with this history entry.
 
+=head2 ticket
+
+A weak reference to the ticket object for this ticket history entry
+
+=head2 is_create
+
+A boolean. Returns true if this is the transaction which created the ticket
+
 =cut
 
 has connection => (
@@ -46,10 +54,12 @@ has connection => (
 
 has prop_changes => ( isa => 'HashRef', is => 'rw' );
 
+has is_create   => ( isa => 'Bool',      is => 'rw', default => 0 );
 has author   => ( isa => 'Str',      is => 'rw' );
 has date     => ( isa => 'DateTime', is => 'rw' );
 has category => ( isa => 'Str',      is => 'rw' );
 has content  => ( isa => 'Str',      is => 'rw' );
+has ticket  => ( isa => 'Net::Trac::Ticket',      is => 'rw', weak_ref => 1);
 
 =head1 METHODS
 

@@ -79,7 +79,7 @@ sub load {
     my @history;
     # Work on the newest entry first so we can back-calculate from the current state
     foreach my $entry (reverse @entries) {
-        my $e = Net::Trac::TicketHistoryEntry->new({ connection => $self->connection });
+        my $e = Net::Trac::TicketHistoryEntry->new({ connection => $self->connection, ticket => $self->ticket });
         $e->parse_feed_entry($entry, $temp_state);
         # newest entry should be at the front of the list in the history later
         unshift @history, $e;
@@ -90,6 +90,8 @@ sub load {
     my $creation =Net::Trac::TicketHistoryEntry->new({connection => $self->connection});
     #  Reporter can change. really, we should work backwards through the whole history
     #  to get the first version
+    $creation->ticket($self->ticket);
+    $creation->is_create(1);
     $creation->author($self->ticket->reporter);
     $creation->date($self->ticket->created);
     $creation->content('Ticket created');
