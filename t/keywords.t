@@ -37,13 +37,13 @@ like($ticket->summary, qr/Summary #1/, "The summary looks correct");
 
 can_ok($ticket => 'update');
 ok($ticket->update( status => 'closed' ), "status = closed");
-is(@{$ticket->history->entries}, 1, "Got one history entry.");
+is(@{$ticket->history->entries}, 2, "Got 2 history entries.");
 is($ticket->status, 'closed', "Got updated status");
 sleep(1); # I hate trac
 {
     
     ok($ticket->update( keywords => 'foo bar' ), "I set the keywords");
-is(@{$ticket->history->entries}, 2, "Got 2 history entries.");
+is(@{$ticket->history->entries}, 3, "Got 3 history entries.");
 my @entries = @{$ticket->history->entries};
 my $keywords_change = pop @entries;
 my $prop_changes = $keywords_change->prop_changes;
@@ -56,7 +56,7 @@ is ($pc->new_value, 'bar foo');
 sleep(1);
 {
 ok($ticket->update( keywords => 'foo bar baz' ), "I set the keywords");
-is(@{$ticket->history->entries}, 3, "Got n history entries.");
+is(@{$ticket->history->entries}, 4, "Got n history entries.");
 my @entries = @{$ticket->history->entries};
 my $keywords_change = pop @entries;
 my $prop_changes = $keywords_change->prop_changes;
@@ -70,7 +70,7 @@ is ($pc->new_value, 'bar baz foo');
 sleep(1);
 {
 ok($ticket->update( keywords => 'baz foo' ), "I set the keywords");
-is(@{$ticket->history->entries}, 4, "Got n history entries.");
+is(@{$ticket->history->entries}, 5, "Got n history entries.");
 my @entries = @{$ticket->history->entries};
 my $keywords_change = pop @entries;
 my $prop_changes = $keywords_change->prop_changes;
@@ -83,7 +83,7 @@ sleep(1);
 {
     #Trac thinks we change from "Baz foo" to "foo baz";
 ok($ticket->update( keywords => 'foo baz' ), "I set the keywords");
-is(@{$ticket->history->entries}, 5, "Got n history entries.");
+is(@{$ticket->history->entries}, 6, "Got n history entries.");
 my @entries = @{$ticket->history->entries};
 my $keywords_change = pop @entries;
 my $prop_changes = $keywords_change->prop_changes;

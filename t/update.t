@@ -37,7 +37,7 @@ like($ticket->summary, qr/Summary #1/, "The summary looks correct");
 
 can_ok($ticket => 'update');
 ok($ticket->update( status => 'closed' ), "status = closed");
-is(@{$ticket->history->entries}, 1, "Got one history entry.");
+is(@{$ticket->history->entries}, 2, "Got 2 history entries.");
 is($ticket->status, 'closed', "Got updated status");
 
 my $search = Net::Trac::TicketSearch->new( connection => $trac );
@@ -50,7 +50,7 @@ is($search->results->[0]->id, 1, "Got id");
 is($search->results->[0]->status, 'closed', "Got status");
 sleep(1); # trac can't have two updates within one second
 ok($ticket->update( resolution => 'fixed' ), "resolution = fixed");
-is(@{$ticket->history->entries}, 2, "Got two history entries");
+is(@{$ticket->history->entries}, 3, "Got 3 history entries");
 is($ticket->resolution, 'fixed', "Got updated resolution");
 
 

@@ -1,7 +1,7 @@
 use Test::More;
 
 unless (`which trac-admin`) { plan skip_all => 'You need trac installed to run the tests'; }
-plan tests => 26;
+plan tests => 25;
 
 
 use_ok('Net::Trac::Connection');
@@ -54,5 +54,4 @@ isa_ok($history, 'Net::Trac::TicketHistory');
 can_ok($history, 'entries');
 my @entries = @{$history->entries};
 my $first = shift @entries;
-is($entries[0], undef);
 is ($first->category, 'Ticket');

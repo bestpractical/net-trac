@@ -39,8 +39,8 @@ like($ticket->summary, qr/Summary #1/, "The summary looks correct");
 
 can_ok($ticket => 'update');
 ok($ticket->update( comment => 'I like moose.' ), "Creating comment about moose.");
-is(@{$ticket->history->entries}, 1, "Got one history entry.");
-like($ticket->history->entries->[0]->content, qr/I like moose./, "The comment looks correct.");
+is(@{$ticket->history->entries}, 2, "Got 2 history entries.");
+like($ticket->history->entries->[1]->content, qr/I like moose./, "The comment looks correct.");
 
 my ($fh, $filename) = tempfile();
 my $alpha = join '', 'A'..'Z';
@@ -51,7 +51,7 @@ ok(-e $filename, "temp file exists: $filename");
 ok(-s $filename, "temp file has non-zero size");
 can_ok($ticket => 'attach');
 ok($ticket->attach( file => $filename, description => 'Test description' ), "Attaching file.");
-is(@{$ticket->history->entries}, 2, "Got two history entries.");
+is(@{$ticket->history->entries}, 3, "Got 3 history entries.");
 is(@{$ticket->attachments}, 1, "Got one attachment");
 is($ticket->attachments->[-1]->size, 27, "Got right size!");
 is($ticket->attachments->[-1]->author, 'hiro', "Got right author!");

@@ -85,6 +85,17 @@ sub load {
         unshift @history, $e;
     }
 
+
+    # trac doesn't have a history entry for ticket creation. Let's fake one up
+    my $creation =Net::Trac::TicketHistoryEntry->new({connection => $self->connection});
+    #  Reporter can change. really, we should work backwards through the whole history
+    #  to get the first version
+    $creation->author($self->ticket->reporter);
+    $creation->date($self->ticket->created);
+    $creation->content('Ticket created');
+    $creation->category('Ticket');
+    unshift @history, $creation;
+
     $self->entries( \@history );
     return 1;
 }

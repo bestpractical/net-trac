@@ -37,8 +37,8 @@ like($ticket->summary, qr/Summary #1/, "The summary looks correct");
 
 can_ok($ticket => 'update');
 ok($ticket->update( comment => 'I like moose.' ), "Creating comment about moose.");
-is(@{$ticket->history->entries}, 1, "Got one history entry.");
-like($ticket->history->entries->[0]->content, qr/I like moose./, "The comment looks correct.");
+is(@{$ticket->history->entries}, 2, "Got 2 history entries.");
+like($ticket->history->entries->[1]->content, qr/I like moose./, "The comment looks correct.");
 
 can_ok($ticket => 'comment');
 sleep(1); # trac can't accept two updates within 1 second on the same ticket.
@@ -51,6 +51,6 @@ like($ticket->comments->[0]->content, qr/moose/, "The previous comment looks cor
 sleep(1);
 ok($ticket->update( summary => 'Summary #1 updated' ), "Updating summary.");
 like($ticket->summary, qr/Summary #1 updated/, "The summary looks correct");
-is(@{$ticket->history->entries}, 3, "Got three history entries");
+is(@{$ticket->history->entries}, 4, "Got 4 history entries");
 is(@{$ticket->comments}, 2, "Only two comments");
 
