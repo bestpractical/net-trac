@@ -58,6 +58,7 @@ has url         => ( isa => 'Str',      is => 'rw' );
 has author      => ( isa => 'Str',      is => 'rw' );
 has size        => ( isa => 'Int',      is => 'rw' );
 
+
 =head1 PRIVATE METHODS
 
 =head2 _parse_html_chunk STRING
@@ -79,17 +80,42 @@ sub _parse_html_chunk {
 #                  Test description
 #                </dd>
 
+# for individual attachment page, the html is like:
+#
+#    <div id="content" class="attachment">
+#        <h1><a href="/xx/ticket/2">Ticket #2</a>: test.2.txt</h1>
+#        <table id="info" summary="Description">
+#          <tbody>
+#            <tr>
+#              <th scope="col">
+#                File test.2.txt, <span title="5 bytes">5 bytes</span>
+#                (added by sunnavy,  <a class="timeline" href="/xx/timeline?from=2009-05-27T14%3A31%3A02Z%2B0800&amp;precision=second" title="2009-05-27T14:31:02Z+0800 in Timeline">13 seconds</a> ago)
+#              </th>
+#            </tr>
+#            <tr>
+#              <td class="message searchable">
+#                <p>
+#blalba
+#</p>
+#
+#              </td>
+#            </tr>
+#          </tbody>
+#        </table>
+#    </div>
+    
+
     $self->filename($1) if $html =~ qr{<a (?:.+?) title="View attachment">(.+?)</a>};
     $self->url( "/raw-attachment/ticket/" . $self->ticket . "/" . $self->filename )
         if defined $self->filename;
 
     $self->size($1)   if $html =~ qr{<span title="(\d+) bytes">};
-    $self->author($1) if $html =~ qr{added by <em>(.+?)</em>};
+    $self->author($1) if $html =~ qr{added by (?:<em>)?\s*(\w+)};
     if ( $html =~ qr{<a (?:.+?) title="(.+?) in Timeline">} ) {
         my $scalar_date = $1;
-       $self->date( Net::Trac::Ticket->timestamp_to_datetime($scalar_date));
-    }       
-    $self->description($1) if $html =~ qr{<dd>\s*(\S.*?)\s*</dd>\s*$};
+        $self->date( Net::Trac::Ticket->timestamp_to_datetime($scalar_date) );
+    }
+    $self->description($1) if $html =~ qr{(?:<dd>|<p>)\s*(.*?)\s*(?:</dd>|</p>)}s;
 
     return 1;
 }
