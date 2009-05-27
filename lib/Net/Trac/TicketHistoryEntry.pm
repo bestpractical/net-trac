@@ -37,6 +37,10 @@ Returns a L<DateTime> object.
 Returns a hashref (property names as the keys) of
 L<Net::Trac::TicketPropChange>s associated with this history entry.
 
+=head2 attachment
+
+if there's attachment, return it, else, return undef
+
 =head2 ticket
 
 A weak reference to the ticket object for this ticket history entry
@@ -59,6 +63,7 @@ has author   => ( isa => 'Str',      is => 'rw' );
 has date     => ( isa => 'DateTime', is => 'rw' );
 has category => ( isa => 'Str',      is => 'rw' );
 has content  => ( isa => 'Str',      is => 'rw' );
+has attachment => ( isa => 'Net::Trac::TicketAttachment', is => 'rw' );
 has ticket  => ( isa => 'Net::Trac::Ticket',      is => 'rw', weak_ref => 1);
 
 =head1 METHODS
@@ -123,7 +128,24 @@ sub _parse_props {
     foreach my $line (@prop_lines) {
         my ($prop, $old, $new);
         if ($line =~ m{<strong>attachment</strong>}) {
-            # we can't handle trac's "attahcment changes" messages yet
+            my ($name) = $line =~ m!<em>(.*?)</em>!;
+            my $content = $self->connection->_fetch(
+                "/attachment/ticket/" . $self->ticket->id . "/$name" )
+              or next;
+
+            if ( $content =~
+                m{<div id="content" class="attachment">(.+?)</div>}is )
+            {
+                my $frag = $1;
+                my $att  = Net::Trac::TicketAttachment->new(
+                    connection => $self->connection,
+                    ticket     => $self->ticket->id,
+                    filename   => $name,
+                );
+                $att->_parse_html_chunk($frag);
+                $self->attachment( $att );
+            }
+
             next;
         }
         if ($line =~ m{<strong>description</strong>}) {
