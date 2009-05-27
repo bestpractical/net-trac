@@ -65,14 +65,14 @@ has content => (
     isa     => 'Str',
     is      => 'rw',
     lazy    => 1,
-    default => sub { $_[0]->_load },
+    default => sub { ($_[0]->_load)[0] },
 );
 
 has content_type => (
     isa     => 'Str',
     is      => 'rw',
     lazy    => 1,
-    default => sub { $_[0]->_load },
+    default => sub { ($_[0]->_load)[1] },
 );
 
 
@@ -147,6 +147,7 @@ sub _load {
     }
     $self->content( $content );
     $self->content_type( $content_type );
+    return $content, $content_type;
 }
 
 =head1 LICENSE
