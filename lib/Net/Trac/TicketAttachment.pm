@@ -35,7 +35,11 @@ Relative to the remote Trac instance URL as set in the L<Net::Trac::Connection>.
 
 =head2 content
 
-Fetches and returns the content from the URL.
+returns the content of the attachment
+
+=head2 content_type
+
+returns the content_type of the attachment
 
 =head2 size
 
