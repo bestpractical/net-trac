@@ -4,7 +4,7 @@ use strict;
 use Test::More;
 
 unless (`which trac-admin`) { plan skip_all => 'You need trac installed to run the tests'; }
-plan tests => 29;
+plan tests => 30;
 
 use_ok('Net::Trac::Connection');
 use_ok('Net::Trac::Ticket');
@@ -42,7 +42,7 @@ ok($ticket->update( comment => 'I like moose.' ), "Creating comment about moose.
 is(@{$ticket->history->entries}, 2, "Got 2 history entries.");
 like($ticket->history->entries->[1]->content, qr/I like moose./, "The comment looks correct.");
 
-my ($fh, $filename) = tempfile();
+my ($fh, $filename) = tempfile(SUFFIX => '.txt');
 my $alpha = join '', 'A'..'Z';
 print $fh "$alpha\n"; # 27 bytes
 close $fh;
@@ -58,4 +58,5 @@ is($ticket->attachments->[-1]->author, 'hiro', "Got right author!");
 like($filename, qr/\E@{[$ticket->attachments->[-1]->filename]}\E/, "Got right filename!");
 is($ticket->attachments->[-1]->description, 'Test description', "Got right description!");
 is($ticket->attachments->[-1]->content, "$alpha\n", "Got right content!");
+is($ticket->attachments->[-1]->content_type, "text/plain", "Got right content type!");
 
