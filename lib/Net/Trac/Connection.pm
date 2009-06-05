@@ -83,8 +83,7 @@ has mech => (
     lazy    => 1,
     default => sub {
         my $self = shift;
-        my $m    = Net::Trac::Mechanize->new();
-        $m->cookie_jar( {} );
+        my $m    = Net::Trac::Mechanize->new( cookie_jar => {}, keep_alive => 4);
         $m->trac_user( $self->user );
         $m->trac_password( $self->password );
         return $m;
