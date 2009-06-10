@@ -4,6 +4,7 @@ use warnings;
 package Net::Trac::TicketAttachment;
 
 use Any::Moose;
+use URI::Escape qw(uri_escape);
 
 =head1 NAME
 
@@ -123,8 +124,10 @@ sub _parse_html_chunk {
     
 
     $self->filename($1) if $html =~ qr{<a (?:.+?) title="View attachment">(.+?)</a>};
-    $self->url( "/raw-attachment/ticket/" . $self->ticket . "/" . $self->filename )
-        if defined $self->filename;
+    $self->url( "/raw-attachment/ticket/"
+          . $self->ticket . "/"
+          . uri_escape( $self->filename ) )
+      if defined $self->filename;
 
     $self->size($1)   if $html =~ qr{<span title="(\d+) bytes">};
     $self->author($1) if $html =~ qr{added by (?:<em>)?\s*(\w+)};

@@ -7,6 +7,7 @@ use Any::Moose;
 use Net::Trac::TicketPropChange;
 use DateTime;
 use HTTP::Date;
+use URI::Escape qw(uri_escape);
 
 =head1 NAME
 
@@ -132,8 +133,11 @@ sub _parse_props {
         my ( $prop, $old, $new );
         if ( $line =~ m{<strong>attachment</strong>} ) {
             my ($name) = $line =~ m!<em>(.*?)</em>!;
-            my $content = $self->connection->_fetch( "/attachment/ticket/" . $self->ticket->id . "/$name" )
-                or next;
+            my $content =
+              $self->connection->_fetch( "/attachment/ticket/"
+                  . $self->ticket->id . '/'
+                  . uri_escape($name) )
+              or next;
 
             if ( $content =~ m{<div id="content" class="attachment">(.+?)</div>}is ) {
                 my $frag = $1;
