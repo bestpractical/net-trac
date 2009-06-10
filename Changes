@@ -1,3 +1,15 @@
+0.14 Wed Jun 10 10:06:36 EDT 2009
+
+* Use keepalives for slightly better trac performance -- <jesse@bestpractical.com> (3abd840)
+* Fixes for our awful html history parsing heuristics -- <jesse@bestpractical.com> (4484ea2)
+* content_type test for attachment -- <sunnavy@bestpractical.com> (605ac65)
+* let _load return content and content_type so default values can use them -- <sunnavy@bestpractical.com> (980f388)
+* added attachment attr and parse it too for TicketHistoryEntry -- <sunnavy@bestpractical.com> (c3d23c5)
+* pod update for Attachment -- <sunnavy@bestpractical.com> (7e524cb)
+* added content and content_type attrs for Attachment -- <sunnavy@bestpractical.com> (4c6998c)
+* update attachment parse part to satisify individual attachment page need -- <sunnavy@bestpractical.com> (1891837)
+
+
 0.13 Tue May  5 18:38:27 EDT 2009
 
 * Added create transactions to ticket history
