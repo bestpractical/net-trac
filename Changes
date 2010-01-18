@@ -1,3 +1,8 @@
+0.15 Mon Jan 18 11:58:06 PST 2010
+
+* Module::Install bump 
+
+
 0.14 Wed Jun 10 10:06:36 EDT 2009
 
 * Use keepalives for slightly better trac performance -- <jesse@bestpractical.com> (3abd840)
