@@ -339,10 +339,25 @@ sub update {
 
     # Copy over the values we'll be using
     my %form = map  { "field_".$_ => $args{$_} }
-               grep { !/comment|no_auto_status/ } keys %args;
+               grep { !/comment|no_auto_status|status|resolution|owner/ } keys %args;
 
     # Copy over comment too -- it's a pseudo-prop
     $form{'comment'} = $args{'comment'};
+    $self->connection->mech->form_number( $form_num );
+
+    if ( $args{'resolution'} || $args{'status'} && $args{'status'} eq 'closed' ) {
+        $form{'action'}                            = 'resolve';
+        $form{'action_resolve_resolve_resolution'} = $args{'resolution'}
+          if $args{'resolution'};
+    }
+    elsif ( $args{'owner'} || $args{'status'} && $args{'status'} eq 'assigned' ) {
+        $form{'action'}                         = 'reassign';
+        $form{'action_reassign_reassign_owner'} = $args{'owner'}
+          if $args{'owner'};
+    }
+    elsif ( $args{'status'} && $args{'status'} eq 'reopened' ) {
+        $form{'action'} = 'reopen';
+    }
 
     $self->connection->mech->submit_form(
         form_number => $form_num,

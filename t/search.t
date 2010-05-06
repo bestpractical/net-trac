@@ -4,7 +4,7 @@ use strict;
 use Test::More;
 
 unless (`which trac-admin`) { plan skip_all => 'You need trac installed to run the tests'; }
-plan tests => 60;
+plan tests => 58;
 
 
 use_ok('Net::Trac::Connection');
@@ -52,8 +52,6 @@ ok($ticket->load(3));
 like($ticket->state->{'summary'}, qr/Summary moose #3/);
 like($ticket->summary, qr/Summary moose #3/, "The summary looks correct");
 like($ticket->description, qr/Any::Moose/, "The description looks correct");
-ok($ticket->update( status => 'reopened' ), "Status = reopened");
-is($ticket->status, 'reopened', "Set status");
 
 my $search = Net::Trac::TicketSearch->new( connection => $trac );
 isa_ok( $search, 'Net::Trac::TicketSearch' );

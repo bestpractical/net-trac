@@ -4,7 +4,7 @@ use strict;
 use Test::More;
 
 unless (`which trac-admin`) { plan skip_all => 'You need trac installed to run the tests'; }
-plan tests => 29;
+plan tests => 32;
 
 use_ok('Net::Trac::Connection');
 use_ok('Net::Trac::Ticket');
@@ -49,8 +49,12 @@ isa_ok($search->results->[0], 'Net::Trac::Ticket');
 is($search->results->[0]->id, 1, "Got id");
 is($search->results->[0]->status, 'closed', "Got status");
 sleep(1); # trac can't have two updates within one second
-ok($ticket->update( resolution => 'fixed' ), "resolution = fixed");
+ok($ticket->update( status => 'reopened' ), "status = reopened");
 is(@{$ticket->history->entries}, 3, "Got 3 history entries");
-is($ticket->resolution, 'fixed', "Got updated resolution");
+is($ticket->status, 'reopened', "Got updated status");
 
+sleep(1); # trac can't have two updates within one second
+ok($ticket->update( resolution => 'fixed' ), "resolution = fixed");
+is(@{$ticket->history->entries}, 4, "Got 3 history entries");
+is($ticket->resolution, 'fixed', "Got updated resolution");
 
