@@ -301,10 +301,7 @@ sub create {
 
 =head2 update HASH
 
-Updates the current ticket with the specified values.  This method will
-attempt to emulate Trac's default workflow by auto-updating the status
-based on changes to other fields.  To avoid this auto-updating, specify
-a true value as the value for the key C<no_auto_status>.
+Updates the current ticket with the specified values.
 
 Returns undef on failure, and the ID of the current ticket on success.
 
@@ -316,24 +313,9 @@ sub update {
         @_,
         {
             comment         => 0,
-            no_auto_status  => { default => 0 },
             %{$self->_metadata_validation_rules( 'update' => $self->valid_update_props )}
         }
     );
-
-    # Automatically set the status for default trac workflows unless
-    # we're asked not to
-    unless ( $args{'no_auto_status'} ) {
-        $args{'status'} = 'closed'
-            if $args{'resolution'} and not $args{'status'};
-        
-        $args{'status'} = 'assigned'
-            if $args{'owner'} and not $args{'status'};
-        
-        $args{'status'} = 'accepted'
-            if $args{'owner'} and $args{'owner'} eq $self->connection->user
-               and not $args{'status'};
-    }
 
     my ($form,$form_num)= $self->_get_update_ticket_form();
 
