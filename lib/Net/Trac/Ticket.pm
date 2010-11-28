@@ -56,7 +56,11 @@ has history => (
 
 
 
-has _attachments            => ( isa => 'ArrayRef', is => 'rw' );
+has _attachments => (
+    isa => 'ArrayRef',
+    is => 'rw',
+    default => sub {[]}
+);
 
 our $LOADED_NEW_METADATA =0;
 our $LOADED_UPDATE_METADATA =0;
