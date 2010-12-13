@@ -79,16 +79,25 @@ sub valid_severities { shift; $_VALID_SEVERITIES = shift if (@_); return $_VALID
 
 sub basic_statuses { qw( new accepted assigned reopened closed ) }
 
-sub valid_props { qw( id summary type status priority severity resolution owner reporter cc
-        description keywords component milestone version time changetime ) }
+my @valid_props_arr = ();
+
+sub valid_props { return @valid_props_arr }
+
+sub add_custom_props {
+    my ($self, @props) = @_;
+    for my $prop (@props) {
+        next if grep { $_ eq $prop } @valid_props_arr;
+        push @valid_props_arr, $prop;
+        no strict 'refs';
+        *{ "Net::Trac::Ticket::" . $prop } = sub { shift->state->{$prop} };
+    }
+}
+
+Net::Trac::Ticket->add_custom_props(qw( id summary type status priority severity resolution owner reporter cc
+        description keywords component milestone version time changetime ));
 
 sub valid_create_props { grep { !/^(?:resolution|time|changetime)$/i } $_[0]->valid_props }
 sub valid_update_props { grep { !/^(?:time|changetime)$/i } $_[0]->valid_props }
-
-for my $prop ( __PACKAGE__->valid_props ) {
-    no strict 'refs';
-    *{ "Net::Trac::Ticket::" . $prop } = sub { shift->state->{$prop} };
-}
 
 sub created       { my $self= shift; $self->timestamp_to_datetime($self->time) }
 sub last_modified { my $self= shift; $self->timestamp_to_datetime($self->changetime) }
@@ -204,6 +213,14 @@ sub _get_update_ticket_form {
     return undef;
 }
 
+sub _get_possible_values {
+    my $self = shift;
+    my ($form, $field) = @_;
+    my $res = $form->find_input($field);
+    return [] unless defined $res; 
+    return [ $res->possible_values ];
+}
+
 sub _fetch_new_ticket_metadata {
     my $self = shift;
 
@@ -214,10 +231,13 @@ sub _fetch_new_ticket_metadata {
         return undef;
     }
 
-    $self->valid_milestones([ $form->find_input("field_milestone")->possible_values ]);
-    $self->valid_types     ([ $form->find_input("field_type")->possible_values ]);
-    $self->valid_components([ $form->find_input("field_component")->possible_values ]);
-    $self->valid_priorities([ $form->find_input("field_priority")->possible_values ]);
+    $self->valid_milestones(
+        $self->_get_possible_values( $form, 'field_milestone' ) );
+    $self->valid_types( $self->_get_possible_values( $form, 'field_type' ) );
+    $self->valid_components(
+        $self->_get_possible_values( $form, 'field_component' ) );
+    $self->valid_priorities(
+        $self->_get_possible_values( $form, 'field_priority' ) );
 
     my $severity = $form->find_input("field_severity");
     $self->valid_severities([ $severity->possible_values ]) if $severity;
@@ -527,6 +547,10 @@ getting them.
 =head2 valid_props
 
 Returns a list of the valid properties of a ticket.
+
+=head2 add_custom_props
+
+Adds custom properties to alid properties list
 
 =head2 valid_create_props
 
