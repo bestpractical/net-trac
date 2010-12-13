@@ -17,14 +17,26 @@ sub new {
     return $self;
 }
 
-sub start_test_server {
-my $self = shift;
+sub init_test_server {
+    my $self = shift;
+    $self->port( int( 60000 + rand(2000) ) );
+    $self->dir( tempdir( CLEANUP => 1 ) );
+    $self->init;
 
-$self->port( int(60000 + rand(2000)));
-$self->dir(tempdir( CLEANUP => 1));
-$self->init;
-$self->daemonize;
-return $self->_did_server_start;
+    if (@_) {
+        open my $fh, '>>',
+          File::Spec->catfile( $self->dir, 'trac', 'conf', 'trac.ini' )
+          or die $!;
+        print $fh @_;
+    }
+    return 1;
+}
+
+sub start_test_server {
+    my $self = shift;
+    $self->init_test_server(@_);
+    $self->daemonize;
+    return $self->_did_server_start;
 }
 
 sub _did_server_start {
