@@ -550,7 +550,7 @@ Returns a list of the valid properties of a ticket.
 
 =head2 add_custom_props
 
-Adds custom properties to alid properties list
+Adds custom properties to valid properties list.
 
 =head2 valid_create_props
 
