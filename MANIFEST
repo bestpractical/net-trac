@@ -26,6 +26,7 @@ META.yml
 SIGNATURE
 t/01-dependencies.t
 t/02-create.t
+t/10-ticket-cf.t
 t/50-full-api.t
 t/99-pod-coverage.t
 t/99-pod.t
