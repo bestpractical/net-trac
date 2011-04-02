@@ -1,3 +1,11 @@
+0.16 Sat Apr 02 13:00:00 EDT 2011
+
+* initial cf fields support and tests -- sunnavy@bestpractical.com,
+  Jacek Pasternak (6af5742, f55d5a, b061eca)
+* add default arrayref for ticket attachments -- plobsinger@gmail.com (c3bd330)
+* stick to the update api: trac doesn't support directly update status and
+  resolution since 0.11.7 -- sunnavy@bestpractical.com (4bd778c, 08492c3)
+
 0.15 Mon Jan 18 11:58:06 PST 2010
 
 * Module::Install bump 
